@@ -1,0 +1,307 @@
+/**
+  Copyright (c) 2009, Ralf Hertsch
+
+  $Id: backend.css 11 2010-06-09 04:38:59Z ralf $
+**/
+
+body,td,th,input,textarea {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	margin: 0px;
+}
+abbr {
+  cursor: help;
+  border-bottom: 1px dotted #da251d;
+}
+acronym {
+  cursor: help;
+  border-bottom: 1px dotted #da251d;
+}
+.stichwort_text {
+  cursor: help;
+  border-bottom: 1px dotted #da251d;
+}
+
+td
+{
+  font-size: 8pt;
+  vertical-align: top;
+}
+td.label {
+  font-weight: bold;
+}
+
+tr.flip {
+  background-color: #FFFFCC;
+}
+tr.flop {
+  background-color: transparent;
+}
+input
+{
+  width: 98%;
+  background-color: transparent;
+}
+input[type=submit],
+input[type=button]
+{
+  width: 150px;
+}
+input[type=radio],
+input[type=checkbox]
+{
+  width: auto;
+}
+input[type=text].disabled {
+  color: #999999;
+  background-color: transparent;
+  border: none;
+}
+
+select
+{
+  width: 98%;
+}
+textarea
+{
+  width: 98%;
+}
+
+.nav_tab
+{
+
+  padding: 3px 0 3px 10px;
+  margin: 15px 0;
+  border-bottom: 1px solid #dddddd;
+  list-style-type: none;
+  text-align: left; /*set to left, center, or right to align the menu as desired*/
+}
+.nav_tab li
+{
+  display: inline;
+  margin: 0;
+}
+.nav_tab li a
+{
+  text-decoration: none;
+  padding: 3px 7px;
+  margin-right: 3px;
+  border: 1px solid #dddddd;
+  border-bottom: none;
+  background-color: #E8E8E8;
+}
+.nav_tab li a:link,
+.nav_tab li a:visited
+{
+  color: #AFAFAF;
+}
+.nav_tab li a:hover,
+.nav_tab li a:active
+{
+  background-color: #FFFFCC;
+  color: #000;
+}
+.nav_tab li.selected a
+{ /*selected tab effect*/
+  position: relative;
+  top: 1px;
+  padding-top: 4px;
+  color: #000;
+  background-color: #fff;
+  font-weight: bold;
+}
+.gl_backend {
+  width: 100%;
+  clear: both;
+  background-image: none;
+  color: #000000;
+  background-color: transparent;
+  font-size: 9pt;
+}
+
+.code_sample {
+  font-size: 9pt;
+  color: #003366;
+  background-color: #FFE4B5;
+  border: 1px solid #003366;
+  padding: 10px;
+}
+.copyright {
+  padding: 20px 0 15px 0;
+  font-size: 9pt;
+  font-weight: bold;
+  color: #000000;
+  background-color: transparent;
+}
+.anleitung {
+  font-size: 8pt;
+}
+
+.small
+{
+  font-size: 7pt;
+}
+.intro {
+  border: 1px solid #000000;
+  color: #000000;
+  background-color: #ffffdd;
+  margin: 20px 0 10px 0;
+  padding: 10px;
+  font-size: 8pt;
+}
+.message
+{
+  border: 1px solid #0000CC;
+  color: #000;
+  background-color: #FFFFCC;
+  margin: 20px 0 10px 0;
+  padding: 10px;
+  font-size: 8pt;
+}
+.error
+{
+ border: 1px solid #ff0000;
+ color: #ff0000;
+ background-color: #ffdddd;
+ margin: 20px 0 10px 0;
+ padding: 10px;
+ font-size: 8pt;
+}
+.small-input
+{
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-size: 8pt;
+}
+
+/* calendar icon */
+img.tcalIcon {
+	cursor: pointer;
+	margin-left: 1px;
+	vertical-align: middle;
+}
+/* calendar container element */
+div#tcal {
+	position: absolute;
+	visibility: hidden;
+	z-index: 100;
+	width: 158px;
+	padding: 2px 0 0 0;
+}
+/* all tables in calendar */
+div#tcal table {
+	width: 100%;
+	border: 1px solid silver;
+	border-collapse: collapse;
+	background-color: white;
+}
+/* navigation table */
+div#tcal table.ctrl {
+	border-bottom: 0;
+}
+/* navigation buttons */
+div#tcal table.ctrl td {
+	width: 15px;
+	height: 20px;
+}
+/* month year header */
+div#tcal table.ctrl th {
+	background-color: white;
+	color: black;
+	border: 0;
+}
+/* week days header */
+div#tcal th {
+	border: 1px solid silver;
+	border-collapse: collapse;
+	text-align: center;
+	padding: 3px 0;
+	font-family: tahoma, verdana, arial;
+	font-size: 10px;
+	background-color: gray;
+	color: white;
+}
+/* date cells */
+div#tcal td {
+	border: 0;
+	border-collapse: collapse;
+	text-align: center;
+	padding: 2px 0;
+	font-family: tahoma, verdana, arial;
+	font-size: 11px;
+	width: 22px;
+	cursor: pointer;
+}
+/* date highlight
+   in case of conflicting settings order here determines the priority from least to most important */
+div#tcal td.othermonth {
+	color: silver;
+}
+div#tcal td.weekend {
+	background-color: #ACD6F5;
+}
+div#tcal td.today {
+	border: 1px solid red;
+}
+div#tcal td.selected {
+	background-color: #FFB3BE;
+}
+/* iframe element used to suppress windowed controls in IE5/6 */
+iframe#tcalIF {
+	position: absolute;
+	visibility: hidden;
+	z-index: 98;
+	border: 0;
+}
+/* transparent shadow */
+div#tcalShade {
+	position: absolute;
+	visibility: hidden;
+	z-index: 99;
+}
+div#tcalShade table {
+	border: 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+div#tcalShade table td {
+	border: 0;
+	border-collapse: collapse;
+	padding: 0;
+}
+.date_picker input[type=text] {
+  width: 100px;
+  margin-right: 3px;
+}
+
+/*
+<a class="catchword_html" href="#">{catchword}<span>{explain}</span></a>
+*/
+a.catchword_html {
+  z-index: 1;
+  position: relative;
+  cursor: help;
+  text-decoration: none;
+  border-bottom: 1px dotted #da251d;
+}
+a.catchword_html:hover {
+  z-index: 2;
+}
+a.catchword_html span {
+  display: none;
+  background-color: red;
+}
+a.catchword_html:hover span {
+  display: block;
+  position: absolute;
+  top: 2em;
+  left: 2em;
+  width: 15em;
+  border: 1px solid #da251d;
+  background-color: #ffffcc;
+  color: #000;
+  text-align: left;
+  padding: 5px;
+}
+

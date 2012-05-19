@@ -1,0 +1,29 @@
+<!-- $Id: backend.csv.htt 11 2010-06-09 04:38:59Z ralf $ -->
+<table width="100%">
+  <colgroup>
+    <col width="40%" />
+    <col width="20%" />
+    <col width="30%" />
+    <col width="10%" />
+  </colgroup>
+  <form name="{$form_export_name}" action="{$form_action}" method="post">
+    <input type="hidden" name="{$action_name}" value="{$action_export_value}" />
+      <tr><td colspan="4">&nbsp;</td></tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>{$export_label}</td>
+        <td>{$export_group}</td>
+        <td><input type="submit" value="{$btn_export}" /></td>
+      </tr>
+  </form>
+  <form name="{$form_import_name}" action="{$form_action}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="{$action_name}" value="{$action_import_value}" />
+      <tr><td colspan="4">&nbsp;</td></tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td>{$import_label}</td>
+        <td>{$import_file}</td>
+        <td><input type="submit" value="{$btn_import}" /></td>
+      </tr>
+  </form>
+</table>

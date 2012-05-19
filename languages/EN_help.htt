@@ -1,0 +1,44 @@
+<!-- $Id: EN_help.htt 26 2010-09-01 15:50:00Z ralf $ -->
+<div class="help">
+  <img src="{$img_src}" style="float:right;padding:0 0 0 15px;" width="250" title="dbGlossary" />
+  <h2>dbGlossary</h2>     
+  <p><b>Version:</b> {$version}</p>
+  <p>Copyright &copy; 2009 - {$actual_year} by <a href="mailto:ralf.hertsch@phpmanufaktur.de" title="E-Mail an Ralf Hertsch">Ralf Hertsch</a> (Berlin)</p>
+  <p><i>dbGlossary</i> is  <a href="http://de.wikipedia.org/wiki/Open_source" target="_blank" title="Open Source">Open Source</a> and made available under the terms of <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank" title="GNU General Public License">GNU GPL</a>.</p>
+  <p><u><strong>Functions:</strong></u></p>
+<ul>
+    <li><i>dbGlossary</i> serves, to simplify use and management of abbreviations, <acronym title="short word, derived from the initals of several words">acronyms</acronym>, special terms and cross-references.</li>
+    <li>With <em>dbGlossary </em>you are enabled to generate glossaries (keyword lists) automatically.</li>
+    <li><em>dbGlossary </em>contains a literature management for literature references according to the rules.</li>
+    <li><em>dbGlossary </em>provides a footnote management which automatically marks literature references and lists them at the end of the page.</li>
+</ul>
+<p><u><strong>Working with keywords:</strong></u></p>
+<p>Add your <i>keywords</i> to the data base by means of the <span style="font-weight: bold;">keyword</span> dialogue.</p>
+<p>In the <b>keyword</b> dialogue you define the type of the keyword (abbreviation, <acronym title="short word, derived from the initals of several words">acronym</acronym>, special term or cross-reference) and also define the explanation that the user of your website will be shown.</p>
+<p>In the <b>glossary</b> the keywords defined are listed in alphabetical order and their behaviour is according to your definition.</p>
+<p>In order to use <i>keywords</i> within the text in your website, a <i>keyword</i> has to be preceeded and followed by two vertical strokes, so called <i>'pipes'</i>:</p>
+<p style="text-align: center;"><b>||keyword example||</b></p>
+<p><i>Keywords</i> marked in this way are replaced by a <acronym title="Hyper Text Markup Language">HTML</acronym> compliant marking when the page is displayed. You can find the proposed forms of display used by <i>dbGlossary</i> in <b>Settings</b>. You can freely define and control the <b>format</b> in the file <i>screen.css</i> of the template you use.</p>
+<p>Very soon you will learn that it is very easy and comfortable to mark your text. With cross-reference you can gain a function to refer to often used links (<abbr title="for example">e.g.</abbr> your contact form, <abbr title="and others">etc.</abbr>)...</p>
+<p><u><strong>Creation of keyword lists:</strong></u></p>
+<p>Insert the droplet <strong>[[glossary_list]]</strong> at any position within your page.</p>
+<p>The droplet has several parameters which enable you to control the contents of the list. Formatting of the list is done within the file <em>screen.css </em>of the template you use..</p>
+<p><u><strong>Working with footnote management:</strong></u></p>
+<p>In order to include <em>literature references</em> first enter some literature sources by means of <strong>source </strong> and define <strong>identifiers</strong>.</p>
+<p>Footnote management supports <em> free remarks</em> and <em>literature references</em>.</p>
+<p>In order to include a free remark in a text, insert</p>
+<p style="text-align: center;"><strong>||&#x7b;...this is a free remark}||</strong></p>
+<p>at the desired position within your text. <em>dbGlossary </em>replaces this <em>free remark</em> by an automatically numbered superscripted number<strong><sup>1</sup></strong> and creates a link for it.</p>
+<p>To tell dbGlossary where to display the footnotes please insert</p>
+<p style="text-align: center;"><strong>||&#x7b;footnotes}||</strong></p>
+<p>at the desired position (e.g. at the end of the text). At this position dbGlossary will list remarks and literature references contained in the text in separate lines.</p>
+<p>Example: To insert a literature reference for a <em>literature source</em> with the <em>identifier </em><strong>JS&nbsp;Missing Manual</strong>, enter:</p>
+<p style="text-align: center;"><strong>||&#x7b;source:JS&nbsp;Missing Manual}||</strong></p>
+<p>With <strong>source:</strong> you name the <em>literature source</em>, which according to the rules should contain <em>author, title, subtitle, place of publication, edition</em> and <em>year of publication </em>. Instead of <strong>source:</strong> you may use the shortform <strong>s:</strong>.</p>
+<p>If in addition you want to insert the page(s) you are referring to, please enter:</p>
+<p style="text-align: center;"><strong>||&#x7b;s:JS&nbsp;Missing Manual|r:pages 124-126}||</strong></p>
+<p>A pipe <strong>|</strong> serves to separate the parameters. These can be entered in any sequence. With <strong>r:</strong> or <strong>remark:</strong> you insert an additional annotation. In our example the pages 124-126. dbGlossary completes the literature reference accordingly.</p>
+<p>&nbsp;</p>
+<p><i>dbGlossary</i> is still in evaluation phase. Your experiences and/or suggestions are highly appreciated!</p>
+<p><img alt="" src="{$img_rh}" title="Ralf Hertsch" /></p>
+</div>

@@ -1,0 +1,44 @@
+<!-- $Id: DE_help.htt 24 2010-08-28 09:59:03Z ralf $ -->
+<div class="help">
+  <img src="{$img_src}" style="float:right;padding:0 0 0 15px;" width="250" title="dbGlossary" />
+  <h2>dbGlossary</h2>     
+  <p><b>Version:</b> {$version}</p>
+  <p>Copyright &copy; 2009 - {$actual_year}, by <a href="mailto:ralf.hertsch@phpmanufaktur.de" title="E-Mail an Ralf Hertsch">Ralf Hertsch</a> (Berlin)</p>
+  <p><i>dbGlossary</i> ist  <a href="http://de.wikipedia.org/wiki/Open_source" target="_blank" title="Quelloffene Software">Open Source</a> und unterliegt den Lizenzbestimmungen der <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank" title="GNU General Public License">GNU GPL</a>.</p>
+  <p><u><strong>Funktionen:</strong></u></p>
+<ul>
+    <li><i>dbGlossary</i> dient dazu Abkürzungen, <acronym title="Kurzwort, das aus den Anfangsbuchstaben mehrerer Wörter zusammengesetzt ist">Akronyme</acronym>, Fachbegriffe sowie Querverweise auf einfache Weise zu verwalten und zu verwenden.</li>
+    <li>Mit <em>dbGlossary </em>können sie automatisch Stichwortlisten (Glossar) erstellen.</li>
+    <li><em>dbGlossary </em>verfügt über eine Literaturverwaltung für regelkonforme Literaturverweise.</li>
+    <li>Mit <em>dbGlossary </em>verfügen Sie über eine Fußnotenverwaltung, die automatisch Anmerkungen und/oder Literaturverweise auszeichnet und am Ende der Seite auflistet.</li>
+</ul>
+<p><u><strong>Arbeiten mit Stichworten:</strong></u></p>
+<p>Hierzu fügen Sie der Datenbank zunächst mit dem <span style="font-weight: bold;">Stichwort</span> Dialog die gewünschten <i>Stichworte</i> hinzu.</p>
+<p>Im <b>Stichwort</b> Dialog legen Sie fest, um welche Art von Stichwort es sich handelt (Abkürzung, <acronym title="Kurzwort, das aus den Anfangsbuchstaben mehrerer Wörter zusammengesetzt ist">Akronym</acronym>, Fachbegriff oder Querverweis) und legen die Erläuterung fest, die dem Besucher Ihrer Website angezeigt werden soll.</p>
+<p>Im <b>Glossar</b> sehen Sie die definierten Stichworte in alphabetischer Reihenfolge und mit dem von Ihnen festgelegten Verhalten.</p>
+<p>Damit die <i>Stichworte</i> in ihren Texten angewendet werden, kennzeichnen Sie die gewünschten <i>Stichworte</i> im Fliesstext durch zwei voran- und zwei nachgestellte senkrechte Striche, sogenannte <i>'Pipes'</i>:</p>
+<p style="text-align: center;"><b>||Stichwort Beispiel||</b></p>
+<p>Die so gekennzeichneten <i>Stichworte</i> werden während der Ausgabe der jeweiligen Seite durch eine <acronym title="Hyper Text Markup Language">HTML</acronym> konforme Auszeichnung ersetzt - bei den <b>Einstellungen</b> finden Sie die Vorlagen, die <i>dbStichworte</i> hierfür verwendet. Die <b>Formatierung</b> können Sie über die <i>screen.css</i> des von Ihnen verwendeten Template beliebig festlegen und steuern.</p>
+<p>Sie werden rasch feststellen, dass sich ihre Texte sehr rasch und bequem auszeichnen lassen, darüber hinaus bietet sich die Querverweis Funktion für eine schnelle Kennzeichnung häufig wiederkehrender Links an, <abbr title="zum Beispiel">z.B.</abbr> auf ihr Kontaktformular <abbr title="oder ähnlich">o.ä.</abbr> ...</p>
+<p><u><strong>Erstellen von Stichwortlisten:</strong></u></p>
+<p>Hierzu fügen Sie einfach an einer beliebigen Stelle das Droplet <strong>[[glossary_list]]</strong> ein.</p>
+<p>Das Droplet verfügt über mehrere Parameter über die der Inhalt der Liste gesteuert werden kann, die Formatierung der Liste nehmen Sie über die <em>screen.css </em>des von Ihnen verwendeten Templates vor.</p>
+<p><u><strong>Arbeiten mit der Fußnotenverwaltung:</strong></u></p>
+<p>Wenn Sie <em>Literaturverweise</em> einfügen möchten, sollten Sie zunächst über <strong>Quelle </strong>einige Literurquellen einfügen und <strong>Bezeichner</strong> festlegen.</p>
+<p>Die Fußnotenverwaltung unterstützt <em> freie Anmerkungen</em> und <em>Literaturverweise</em>.</p>
+<p>Um eine freie Anmerkung in einem Fließtext einzufügen fügen Sie an der gewünschten Stelle im Fließtext</p>
+<p style="text-align: center;"><strong>||&#x7b;...ich bin eine freie Anmerkung}||</strong></p>
+<p>ein. <em>dbGlossary </em>ersetzt diese <em>freie Anmerkung</em> durch eine automatisch numerierte Hochzahl<strong><sup>1</sup></strong> und verlinkt diese.</p>
+<p>Damit dbGlossary weiß, an welcher Stelle die Fußnoten ausgegeben werden sollen, fügen Sie, z.B. am Ende des Textes</p>
+<p style="text-align: center;"><strong>||&#x7b;footnotes}||</strong></p>
+<p>ein. Dort wird dbGlossary untereinander die Anmerkungen und Literaturverweise aus dem Fließtext auflisten.</p>
+<p>Um einen Literaturverweis, z.B für die <em>Literaturquelle</em> mit dem <em>Bezeichner </em><strong>JS&nbsp;Missing Manual</strong> einzufügen, schreiben Sie:</p>
+<p style="text-align: center;"><strong>||&#x7b;source:JS&nbsp;Missing Manual}||</strong></p>
+<p>Mit <strong>source:</strong> benennen Sie die <em>Literaturquelle</em>, die regelkonform mit <em>Autor, Titel, Untertitel, Ort, Auflage</em> und <em>Erscheinungsjahr </em>zitiert werden soll. Anstatt <strong>source:</strong> können Sie auch die Kurzform <strong>s:</strong> verwenden.</p>
+<p>Möchten Sie zusätzlich die Seite(n) einfügen, auf die Sie sich beziehen, schreiben Sie:</p>
+<p style="text-align: center;"><strong>||&#x7b;s:JS&nbsp;Missing Manual|r:S. 124-126}||</strong></p>
+<p>Die Pipe <strong>|</strong> dient dem Trennen der Parameter, die Reihenfolge spielt keine Rolle. Mit <strong>r:</strong> oder <strong>remark:</strong> fügen Sie eine Anmerkung ein, in diesem Fall die Seiten 124-126. dbGlossary ergänzt den Literaturverweis entsprechend.</p>
+<p>&nbsp;</p>
+<p><i>dbGlossary</i> befindet sich noch in der Erprobungsphase, ich freue mich über Ihre Erfahrungsberichte und Verbesserungsvorschläge!</p>
+<p><img alt="" src="{$img_rh}" title="Ralf Hertsch" /></p>
+</div>

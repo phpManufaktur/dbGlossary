@@ -1,0 +1,17 @@
+<!-- $Id: backend.glossary.htt 11 2010-06-09 04:38:59Z ralf $ -->
+{$intro}
+{$abc}
+<table width="100%">
+  <colgroup>
+    <col width="5%" />
+    <col width="30%" />
+    <col width="5%" />
+    <col width="15%" />
+    <col width="10%" />
+    <col width="10%" />
+    <col width="10%" />
+    <col width="15%" />
+  </colgroup>
+  {$items}
+</table>
+{$csv}

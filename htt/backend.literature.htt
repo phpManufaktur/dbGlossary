@@ -1,0 +1,14 @@
+<!-- $Id: backend.literature.htt 11 2010-06-09 04:38:59Z ralf $ -->
+{$intro}
+{$abc}
+<table width="100%">
+  <colgroup>
+    <col width="5%" />
+    <col width="22%" />
+    <col width="3%" />
+    <col width="15%" />
+    <col width="55%" />
+  </colgroup>
+  {$items}
+</table>
+{$csv}
