@@ -50,25 +50,25 @@ Footnote management supports _free remarks_ and _literature references_.
 
 In order to include a free remark in a text, insert
 
-    ||&#x7b;...this is a free remark}||
+    ||{...this is a free remark}||
     
 at the desired position within your text. _dbGlossary_ replaces this _free remark_ by an automatically numbered superscripted number^(1) and creates a link for it.
 
 To tell dbGlossary where to display the footnotes please insert
 
-    ||&#x7b;footnotes}||
+    ||{footnotes}||
     
 at the desired position (e.g. at the end of the text). At this position dbGlossary will list remarks and literature references contained in the text in separate lines.
 
 Example: To insert a literature reference for a _literature source_ with the _identifier_ "JS Missing Manual", enter:
 
-    ||&#x7b;source:JS Missing Manual}||
+    ||{source:JS Missing Manual}||
     
 With __source:__ you name the _literature source_, which according to the rules should contain _author, title, subtitle, place of publication, edition_ and _year of publication_. Instead of __source:__ you may use the shortform __s:__.
 
 If in addition you want to insert the page(s) you are referring to, please enter:
 
-    ||&#x7b;s:JS Missing Manual|r:pages 124-126}||
+    ||{s:JS Missing Manual|r:pages 124-126}||
     
 A pipe __|__ serves to separate the parameters. These can be entered in any sequence. With __r:__ or __remark:__ you insert an additional annotation. In our example the pages 124-126. dbGlossary completes the literature reference accordingly.
 
