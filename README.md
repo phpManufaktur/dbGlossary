@@ -18,4 +18,6 @@ dbGlossary help you to create and manage a glossary and/or a literature list in 
 
 [1]: http://websitebaker2.org
 [2]: http://lepton-cms.org
-[3]: 
+[3]: https://github.com/phpManufaktur/dbConnect_LE/downloads
+[4]: https://github.com/phpManufaktur/rhTools/downloads
+[5]: https://github.com/phpManufaktur/Dwoo/downloads
