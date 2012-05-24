@@ -44,7 +44,7 @@ The droplet has several parameters which enable you to control the contents of t
 
 #### Working with footnote management
 
-In order to include _literature references_ first enter some literature sources by means of __source__> and define __identifiers__.
+In order to include _literature references_ first enter some literature sources by means of __source__ and define __identifiers__.
 
 Footnote management supports _free remarks_ and _literature references_.
 
@@ -52,7 +52,7 @@ In order to include a free remark in a text, insert
 
     ||{...this is a free remark}||
     
-at the desired position within your text. _dbGlossary_ replaces this _free remark_ by an automatically numbered superscripted number^(1) and creates a link for it.
+at the desired position within your text. _dbGlossary_ replaces this _free remark_ by an automatically numbered superscripted number<sup>1</sup> and creates a link for it.
 
 To tell dbGlossary where to display the footnotes please insert
 
@@ -77,3 +77,4 @@ A pipe __|__ serves to separate the parameters. These can be entered in any sequ
 [3]: https://github.com/phpManufaktur/dbConnect_LE/downloads
 [4]: https://github.com/phpManufaktur/rhTools/downloads
 [5]: https://github.com/phpManufaktur/Dwoo/downloads
+[6]: https://github.com/phpManufaktur/dbGlossary/downloads
