@@ -2,33 +2,31 @@
 
 /**
  * dbGlossary
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: upgrade.php 20 2011-11-09 19:41:10Z phpmanufaktur $
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2009 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include (WB_PATH . '/framework/class.secure.php');
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (! file_exists($root . '/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root . '/framework/class.secure.php')) {
+        include ($root . '/framework/class.secure.php');
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.glossary.php');
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.droplets.php');
@@ -59,11 +57,11 @@ if ($dbGlossaryLiterature->sqlFieldExists('lit_lastname')) {
 	// change fields lit_firstname and lit_lastname to lit_author - first save old fields
 	$old_data = array();
 	$sql = "SELECT * FROM ".TABLE_PREFIX."mod_glossary_literature";
-	$result = $database->query($sql); 
+	$result = $database->query($sql);
 	if (!$result) {
 		$error .= sprintf('<p>[UPGRADE] %s</p>', $database->get_error());
 	}
-	else { 
+	else {
 		while (false !== ($data = $result->fetchRow())) {
 			$old_data[] = $data;
 		}
@@ -72,7 +70,7 @@ if ($dbGlossaryLiterature->sqlFieldExists('lit_lastname')) {
 		}
 		else {
 			// transport old datas to new field lit_author
-			foreach ($old_data as $old_field) { 
+			foreach ($old_data as $old_field) {
 				$where = array();
 				$where[dbGlossaryLiterature::field_id] = $old_field[dbGlossaryLiterature::field_id];
 				$data = array();
@@ -84,7 +82,7 @@ if ($dbGlossaryLiterature->sqlFieldExists('lit_lastname')) {
 				}
 			}
 			if (!$dbGlossaryLiterature->sqlAlterTableDropField('lit_firstname') ||
-					!$dbGlossaryLiterature->sqlAlterTableDropField('lit_lastname') || 
+					!$dbGlossaryLiterature->sqlAlterTableDropField('lit_lastname') ||
 					!$dbGlossaryLiterature->sqlAlterTableDropField('lit_monographie')) {
 				$error .= sprintf('<p>{UPGRADE] %s</p>', $dbGlossaryLiterature->getError());
 			}
@@ -112,7 +110,7 @@ if (!$dbGlossary->sqlFieldExists(dbGlossary::field_sort)) {
 	}
 	else {
 		// walk through database and update sort fields
-		$SQL = sprintf(	"SELECT * FROM %s", 
+		$SQL = sprintf(	"SELECT * FROM %s",
   									$dbGlossary->getTableName());
 		$glossar = array();
 		if (!$dbGlossary->sqlExec($SQL, $glossar)) {

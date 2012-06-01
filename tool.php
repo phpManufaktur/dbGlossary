@@ -2,33 +2,31 @@
 
 /**
  * dbGlossary
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: tool.php 17 2011-07-20 04:43:30Z phpmanufaktur $
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2009 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include (WB_PATH . '/framework/class.secure.php');
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (! file_exists($root . '/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root . '/framework/class.secure.php')) {
+        include ($root . '/framework/class.secure.php');
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.editor.php');
@@ -46,20 +44,20 @@ global $tools;
 global $parser;
 
 if (!is_object($tools)) $tools = new rhTools();
-if (!is_object($parser)) $parser = new Dwoo(); 
+if (!is_object($parser)) $parser = new Dwoo();
 
 $toolGloss = new toolGlossary();
 $toolGloss->action();
 
 
 class toolGlossary {
-	
+
 	const request_action 						= 'act';
 	const request_csv_export				= 'csvex';
 	const request_csv_import				= 'csvim';
 	const request_items							= 'its';
 	const request_abc								= 'abc';
-	
+
 	const action_default						= 'def';
 	const action_catchword					= 'cat';
 	const action_catchword_check		= 'catc';
@@ -74,7 +72,7 @@ class toolGlossary {
 	const action_literature					= 'lit';
 	const action_source							= 'src';
 	const action_source_check				= 'srcc';
-	
+
 	private $tab_navigation_array = array(
 		self::action_glossary						=> gl_tab_glossary,
 		self::action_catchword					=> gl_tab_catchword,
@@ -83,7 +81,7 @@ class toolGlossary {
 		self::action_config							=> gl_tab_config,
 		self::action_help								=> gl_tab_help
 	);
-	
+
 	private $tab_abc_array = array(
 		'a'		=> 'A',
 		'b'		=> 'B',
@@ -110,25 +108,25 @@ class toolGlossary {
 		'x'		=> 'X,Y,Z',
 		'0-9'	=> '0-9'
 	);
-	
+
 	private $page_link 					= '';
 	private $img_url						= '';
 	private $template_path			= '';
 	private $error							= '';
 	private $message						= '';
-	
+
 	private $swNavHide					= array();
-	
+
 	public function __construct() {
 		$this->page_link = ADMIN_URL.'/admintools/tool.php?tool=dbglossary';
 		$this->template_path = WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/htt/' ;
 		$this->img_url = WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/';
 		if (!defined('LEPTON_VERSION'))	$this->checkOutputFilter();
 	} // __construct()
-	
+
 	/**
     * Set $this->error to $error
-    * 
+    *
     * @param STR $error
     */
   public function setError($error) {
@@ -137,7 +135,7 @@ class toolGlossary {
 
   /**
     * Get Error from $this->error;
-    * 
+    *
     * @return STR $this->error
     */
   public function getError() {
@@ -146,7 +144,7 @@ class toolGlossary {
 
   /**
     * Check if $this->error is empty
-    * 
+    *
     * @return BOOL
     */
   public function isError() {
@@ -161,7 +159,7 @@ class toolGlossary {
   }
 
   /** Set $this->message to $message
-    * 
+    *
     * @param STR $message
     */
   public function setMessage($message) {
@@ -170,7 +168,7 @@ class toolGlossary {
 
   /**
     * Get Message from $this->message;
-    * 
+    *
     * @return STR $this->message
     */
   public function getMessage() {
@@ -179,13 +177,13 @@ class toolGlossary {
 
   /**
     * Check if $this->message is empty
-    * 
+    *
     * @return BOOL
     */
   public function isMessage() {
     return (bool) !empty($this->message);
   } // isMessage
-  
+
   /**
    * Return Version of Module
    *
@@ -195,7 +193,7 @@ class toolGlossary {
     // read info.php into array
     $info_text = file(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/info.php');
     if ($info_text == false) {
-      return -1; 
+      return -1;
     }
     // walk through array
     foreach ($info_text as $item) {
@@ -204,14 +202,14 @@ class toolGlossary {
         $value = explode('=', $item);
         // return floatval
         return floatval(preg_replace('([\'";,\(\)[:space:][:alpha:]])', '', $value[1]));
-      } 
+      }
     }
     return -1;
   } // getVersion()
-  
+
   /**
    * Check the output_filter and patch it if possible
-   * 
+   *
    * @return BOOL
    */
   private function checkOutputFilter() {
@@ -240,10 +238,10 @@ class toolGlossary {
   		return false;
   	}
   }
-  
+
   /**
    * Verhindert XSS Cross Site Scripting
-   * 
+   *
    * @param REFERENCE $_REQUEST Array
    * @return $request
    */
@@ -256,7 +254,7 @@ class toolGlossary {
   	}
 	  return $request;
   } // xssPrevent()
-	
+
   public function action() {
   	$html_allowed = array(dbGlossary::field_explain);
   	foreach ($_REQUEST as $key => $value) {
@@ -265,7 +263,7 @@ class toolGlossary {
   			if (strpos($key, dbGlossaryCfg::field_value) != 0) {
     			$_REQUEST[$key] = $this->xssPrevent($value);
   			}
-  		} 
+  		}
   	}
     isset($_REQUEST[self::request_action]) ? $action = $_REQUEST[self::request_action] : $action = self::action_default;
   	switch ($action):
@@ -334,11 +332,11 @@ class toolGlossary {
   		break;
   	endswitch;
   } // action
-	
-  	
+
+
   /**
    * Erstellt eine Navigationsleiste
-   * 
+   *
    * @param $action - aktives Navigationselement
    * @return STR Navigationsleiste
    */
@@ -346,8 +344,8 @@ class toolGlossary {
   	$result = '';
   	foreach ($this->tab_navigation_array as $key => $value) {
   		if (!in_array($key, $this->swNavHide)) {
-	  		($key == $action) ? $selected = ' class="selected"' : $selected = ''; 
-	  		$result .= sprintf(	'<li%s><a href="%s">%s</a></li>', 
+	  		($key == $action) ? $selected = ' class="selected"' : $selected = '';
+	  		$result .= sprintf(	'<li%s><a href="%s">%s</a></li>',
 	  												$selected,
 	  												sprintf('%s&%s=%s', $this->page_link, self::request_action, $key),
 	  												$value
@@ -357,13 +355,13 @@ class toolGlossary {
   	$result = sprintf('<ul class="nav_tab">%s</ul>', $result);
   	return $result;
   } // getNavigation()
-  
+
   /**
    * Prueft HTTP Links
-   * 
+   *
    * @param $url - zu pruefende URL
    * @param $code_only = false - nur den Status Code zurueckgeben
-   * 
+   *
    * @author Johannes Froemter <j-f@gmx.net>
    * @author Ralf Hertsch <hertsch@berlin.de>
    */
@@ -372,14 +370,14 @@ class toolGlossary {
 	  if (!preg_match("=://=", $url)) $url = "http://$url";
 	  $url = parse_url($url);
 	  if (strtolower($url["scheme"]) != "http") return FALSE;
-	
+
 	  if (!isset($url["port"])) $url["port"] = 80;
 	  if (!isset($url["path"])) $url["path"] = "/";
-	
+
 	  //$fp = fsockopen($url["host"], $url["port"], &$errno, &$errstr, 30);
 		$fp = @fsockopen($url["host"], $url["port"]);
-		@stream_set_timeout($fp, 15); 
-	  
+		@stream_set_timeout($fp, 15);
+
 	  if (!$fp) return FALSE;
 	  else
 	  {
@@ -396,32 +394,32 @@ class toolGlossary {
 	    $http["HTTP-Version"] = $matches[1];
 	    $http["Status-Code"] = $matches[2];
 	    $http["Reason-Phrase"] = $matches[3];
-	
+
 	    // Nur den HTTP Status Code zurueckgeben
 	    if ($code_only) return $http["Status-Code"];
-	
+
 	    $rclass = array("Informational", "Success",
 	                    "Redirection", "Client Error",
 	                    "Server Error");
 	    $http["Response-Class"] = $rclass[$http["Status-Code"][0] - 1];
-	
+
 	    preg_match_all("=^(.+): ([^\r\n]*)=m", $head, $matches, PREG_SET_ORDER);
 	    foreach($matches as $line) $http[$line[1]] = $line[2];
-	
+
 	    // Bei Umleitungen den Status Code der umgeleiteten Adresse ermitteln
 	    if ($http["Status-Code"][0] == 3)
 	      $http["Location-Status-Code"] = $this->linkCheck($http["Location"], true);
-	
+
 	    return $http;
 	  }
   } // linkCheck()
-  
+
   /**
    * Ausgabe des formatierten Ergebnis mit Navigationsleiste
-   * 
+   *
    * @param $action - aktives Navigationselement
    * @param $content - Inhalt
-   * 
+   *
    * @return ECHO RESULT
    */
   public function show($action, $content) {
@@ -443,7 +441,7 @@ class toolGlossary {
 
   public function dlgHelp() {
     global $parser;
-    
+
   	if (file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'_help.htt')) {
   		$help_file = WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'_help.htt';
   	}
@@ -458,7 +456,7 @@ class toolGlossary {
   	);
   	return $parser->get($help_file, $data);
   } // dlgHelp()
-  
+
   public function dlgCatchword() {
   	global $parser;
   	$form_name = 'form_edit';
@@ -484,7 +482,7 @@ class toolGlossary {
   				$item[$key] = $_REQUEST[$key];
   			}
   		}
-  		
+
   	}
   	else {
   		// neues Stichwort
@@ -494,7 +492,7 @@ class toolGlossary {
   		foreach ($item as $key => $value) {
   			if (isset($_REQUEST[$key])) {
   				//(is_string($_REQUEST[$key])) ? $item[$key] = utf8_decode($_REQUEST[$key]) : $item[$key] = $_REQUEST[$key];
-  				$item[$key] = $_REQUEST[$key]; 
+  				$item[$key] = $_REQUEST[$key];
   			}
   		}
   	}
@@ -513,7 +511,7 @@ class toolGlossary {
   		($value == $item[dbGlossary::field_type]) ? $selected = ' selected="selected"' : $selected = '';
 			$select .= sprintf('<option value="%s"%s>%s</option>', $value, $selected, $name);
   	}
-  	$items .= sprintf($row, gl_label_type, sprintf(	'<select id="%s" name="%s" onchange="document.body.style.cursor=\'wait\';glossaryChangeType(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\'); return false;">%s</select>', 
+  	$items .= sprintf($row, gl_label_type, sprintf(	'<select id="%s" name="%s" onchange="document.body.style.cursor=\'wait\';glossaryChangeType(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\'); return false;">%s</select>',
   																									dbGlossary::field_type,
   																									dbGlossary::field_type,
   																									sprintf('%s&%s=%s&%s=%s',
@@ -521,7 +519,7 @@ class toolGlossary {
   																													self::request_action,
   																													self::action_catchword,
   																													dbGlossary::field_id,
-  																													$item[dbGlossary::field_id]), 
+  																													$item[dbGlossary::field_id]),
   																									dbGlossary::field_type,
   																									dbGlossary::field_item,
   																									dbGlossary::field_explain,
@@ -531,7 +529,7 @@ class toolGlossary {
   																									dbGlossary::field_status,
   																									$select));
   	/*
-  	$items .= sprintf($row, gl_label_type, sprintf(	'<select name="%s" onchange="document.body.style.cursor=\'wait\';window.location=\'%s\'+this.value; return false;">%s</select>', 
+  	$items .= sprintf($row, gl_label_type, sprintf(	'<select name="%s" onchange="document.body.style.cursor=\'wait\';window.location=\'%s\'+this.value; return false;">%s</select>',
   																									dbGlossary::field_type,
   																									sprintf('%s&%s=%s&%s=%s&%s=',
   																													$this->page_link,
@@ -539,7 +537,7 @@ class toolGlossary {
   																													self::action_catchword,
   																													dbGlossary::field_id,
   																													$item[dbGlossary::field_id],
-  																													dbGlossary::field_type), 
+  																													dbGlossary::field_type),
   																									$select));
   	*/
   	// Stichwort
@@ -579,7 +577,7 @@ class toolGlossary {
   		$select .= sprintf('<option value="%s"%s>%s</option>', $group, $selected, $group);
   	}
   	$items .= sprintf($row, gl_label_group, sprintf('<select id="%s" name="%s">%s</select>', dbGlossary::field_group, dbGlossary::field_group, $select));
-		
+
 		// Status
 		$select = '';
   	foreach ($dbGlossary->status_array as $value => $name) {
@@ -587,13 +585,13 @@ class toolGlossary {
 			$select .= sprintf('<option value="%s"%s>%s</option>', $value, $selected, $name);
   	}
   	$items .= sprintf($row, gl_label_status, sprintf('<select id="%s" name="%s">%s</select>', dbGlossary::field_status, dbGlossary::field_status, $select));
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
 		}
 		else {
-			($id != -1) ? $intro = gl_intro_catchword_edit : $intro = gl_intro_catchword_new; 
+			($id != -1) ? $intro = gl_intro_catchword_edit : $intro = gl_intro_catchword_new;
 			$intro = sprintf('<div class="intro">%s</div>', $intro);
 		}
 		// Ueberschrift
@@ -613,9 +611,9 @@ class toolGlossary {
   		'abort_location'		=> $this->page_link,
   		'add_buttons'				=> ''
 		);
-		return $parser->get($this->template_path.'backend.catchword.htt', $data);  	
+		return $parser->get($this->template_path.'backend.catchword.htt', $data);
   } // dlgCatchword()
-  
+
   /**
    * Prueft neuen oder geaenderten dbGlossary Eintrag
    * @todo Maskierung von Hochkommata pruefen
@@ -623,9 +621,9 @@ class toolGlossary {
    */
   public function catchwordCheck() {
   	global $tools;
-  	$result = ''; 
+  	$result = '';
   	$dbGlossary = new dbGlossary();
-  
+
   	$fields = $dbGlossary->getFields();
   	foreach ($fields as $key => $value) {
   		switch ($key):
@@ -640,7 +638,7 @@ class toolGlossary {
   			}
   			elseif ($_REQUEST[dbGlossary::field_id] == -1) {
   				// neuer Eintrag, Duplikate verhindern
-  				$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s' AND %s!='%s'", 
+  				$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s' AND %s!='%s'",
   												$dbGlossary->getTableName(),
   												dbGlossary::field_item,
   												$value,
@@ -657,7 +655,7 @@ class toolGlossary {
   				}
   			}
   			$fields[dbGlossary::field_item] = $value;
-  			$fields[dbGlossary::field_sort] = str_replace($dbGlossary->sort_search, $dbGlossary->sort_replace, $value); 
+  			$fields[dbGlossary::field_sort] = str_replace($dbGlossary->sort_search, $dbGlossary->sort_replace, $value);
   			break;
   		case dbGlossary::field_explain:
   			(isset($_REQUEST[dbGlossary::field_explain])) ? $value = trim($_REQUEST[dbGlossary::field_explain]) : $value = '';
@@ -679,7 +677,7 @@ class toolGlossary {
   			elseif ($value == dbGlossary::type_db_glossary) {
   				// dbGlossary: Verweis pruefen
   				(isset($_REQUEST[dbGlossary::field_explain])) ? $item = trim($_REQUEST[dbGlossary::field_explain]) : $item = '';
-  				$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s' AND %s!='%s'", 
+  				$SQL = sprintf(	"SELECT * FROM %s WHERE %s='%s' AND %s!='%s'",
   												$dbGlossary->getTableName(),
   												dbGlossary::field_item,
   												$item,
@@ -710,7 +708,7 @@ class toolGlossary {
   			(isset($_REQUEST[dbGlossary::field_link])) ? $value = $_REQUEST[dbGlossary::field_link] : $value = '';
   			if (!empty($value)) {
   				// Link pruefen
-  				  	// check config 
+  				  	// check config
   				$config = new dbGlossaryCfg();
   				$doCheck = $config->getValue(dbGlossaryCfg::cfgLinkCheck);
   				// linkcheck is enabled
@@ -749,7 +747,7 @@ class toolGlossary {
   			$id = -1;
   			if (!$dbGlossary->sqlInsertRecord($fields, $id)) {
   				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossary->getError()));
-  				return false; 
+  				return false;
   			}
   			$_REQUEST[dbGlossary::field_id] = $id;
   			$_REQUEST[self::request_abc] = strtolower($fields[dbGlossary::field_item][0]);
@@ -775,17 +773,17 @@ class toolGlossary {
   		return false;
   	}
   } // catchwordCheck()
-  
+
   public function dlgGlossary() {
   	global $parser;
   	$dbGlossary = new dbGlossary();
-  	
+
   	// A-Z TAB's...
   	$abc_tab = '';
   	(isset($_REQUEST[self::request_abc])) ? $abc = $_REQUEST[self::request_abc] : $abc = 'a';
   	foreach ($this->tab_abc_array as $key => $value) {
-  		($key== $abc) ? $selected = ' class="selected"' : $selected = ''; 
-  		$abc_tab .= sprintf(	'<li%s><a href="%s">%s</a></li>', 
+  		($key== $abc) ? $selected = ' class="selected"' : $selected = '';
+  		$abc_tab .= sprintf(	'<li%s><a href="%s">%s</a></li>',
 	  												$selected,
 	  												sprintf('%s&%s=%s&%s=%s', $this->page_link, self::request_action, self::action_glossary, self::request_abc, $key),
 	  												$value
@@ -801,8 +799,8 @@ class toolGlossary {
   											dbGlossary::field_sort);
   		break;
   	case 'x':
-  	case 'y':	
-  	case 'z':	
+  	case 'y':
+  	case 'z':
   		// SELECT X,Y,Z
   		$search = sprintf("(%s LIKE 'x%%' OR %s LIKE 'y%%' OR %s LIKE 'z%%')",
   											dbGlossary::field_sort,
@@ -835,7 +833,7 @@ class toolGlossary {
   		// es gibt noch keine Stichworte, Hilfeseite aufrufen
   		return $this->dlgHelp();
   	}
-  									
+
   	$SQL = sprintf(	"SELECT * FROM %s WHERE %s AND %s!='%s' ORDER BY %s ASC",
   									$dbGlossary->getTableName(),
   									$search,
@@ -850,7 +848,7 @@ class toolGlossary {
   	// Gruppen auslesen
   	$config = new dbGlossaryCfg();
   	$groups = $config->getValue(dbGlossaryCfg::cfgGroupArray);
-  	
+
   	$items = '';
   	if (sizeof($stichworte) < 1) {
   		$items = sprintf(gl_error_empty_abc_tab, $this->tab_abc_array[$abc]);
@@ -873,8 +871,8 @@ class toolGlossary {
 		$template_abbr 		= $config->getValue(dbGlossaryCfg::cfgTypeAbbr);
 		$template_acronym = $config->getValue(dbGlossaryCfg::cfgTypeAcronym);
 		$template_text 		= $config->getValue(dbGlossaryCfg::cfgTypeText);
-		$template_link		= $config->getValue(dbGlossaryCfg::cfgTypeLink); 
-		$template_html		= $config->getValue(dbGlossaryCfg::cfgTypeHTML); 										
+		$template_link		= $config->getValue(dbGlossaryCfg::cfgTypeLink);
+		$template_html		= $config->getValue(dbGlossaryCfg::cfgTypeHTML);
   	// Einzelne Zeilen schreiben
   	$flipFlop = true;
   	foreach ($stichworte as $stichwort) {
@@ -908,9 +906,9 @@ class toolGlossary {
   			}
   		}
 			$search = array('{catchword}', '{explain}', '{link}', '{target}');
-			$replace = array(	$sw, 
-												$stichwort[dbGlossary::field_explain], 
-												$stichwort[dbGlossary::field_link], 
+			$replace = array(	$sw,
+												$stichwort[dbGlossary::field_explain],
+												$stichwort[dbGlossary::field_link],
 												$dbGlossary->target_array[$stichwort[dbGlossary::field_target]]);
 			switch ($stichwort[dbGlossary::field_type]):
   		case dbGlossary::type_abbreviation:
@@ -935,9 +933,9 @@ class toolGlossary {
 				$sw = str_ireplace($search, $replace, sprintf(gl_error_type_unknown, $stichwort[dbGlossary::field_type]));
 				break;
 			endswitch;
-			
-			
-  		$id = sprintf('<a href="%s" title="%s">%05d</a>', 
+
+
+  		$id = sprintf('<a href="%s" title="%s">%05d</a>',
   									sprintf('%s&%s=%s&%s=%s', $this->page_link, self::request_action, self::action_catchword, dbGlossary::field_id, $gl_id),
   									gl_header_glossary_edit,
   									$gl_id);
@@ -946,7 +944,7 @@ class toolGlossary {
   										gl_header_glossary_edit,
   										$this->img_url.'edit.gif');
   		if (!in_array($stichwort[dbGlossary::field_group], $groups)) {
-  			$stichwort[dbGlossary::field_group] = $groups[0];	
+  			$stichwort[dbGlossary::field_group] = $groups[0];
   		}
   		$items .= sprintf($row,
   											$flip,
@@ -959,8 +957,8 @@ class toolGlossary {
   											$dbGlossary->status_array[$stichwort[dbGlossary::field_status]],
   											$dbGlossary->mySQLdate2datum($stichwort[dbGlossary::field_update_when])
   											);
-  	} // foreach 
-  	
+  	} // foreach
+
   	// Import / Export
   	$groups = $config->getValue(dbGlossaryCfg::cfgGroupArray);
   	$export_group = sprintf('<option value="-1" selected="selected">%s</option>', gl_text_all_groups);
@@ -968,7 +966,7 @@ class toolGlossary {
   		$export_group .= sprintf('<option value="%s">%s</option>', $group, $group);
   	}
   	$export_group = sprintf('<select name="%s" size="1">%s</select>', self::request_csv_export, $export_group);
-  	
+
   	$import_file = sprintf('<input name="%s" type="file">', self::request_csv_import);
   	$data = array(
   		'form_export_name'		=> 'csv_export',
@@ -986,14 +984,14 @@ class toolGlossary {
   		'btn_import'					=> gl_btn_import
   	);
   	$csv = $parser->get($this->template_path.'backend.csv.htt', $data);
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
 		}
 		else {
 			$intro = sprintf('<div class="intro">%s</div>', sprintf(gl_intro_glossary, $count));
-		}		
+		}
 		$data = array(
 			//'header'				=> gl_header_glossary,
   		'abc'						=> $abc_tab,
@@ -1003,7 +1001,7 @@ class toolGlossary {
 		);
 		return $parser->get($this->template_path.'backend.glossary.htt', $data);
   } // dlgCatchword()
-  
+
   public function dlgConfig() {
   	global $parser;
 		$dbGlossaryCfg = new dbGlossaryCfg();
@@ -1028,10 +1026,10 @@ class toolGlossary {
 			$id = $entry[dbGlossaryCfg::field_id];
 			$count[] = $id;
 			$label = constant($entry[dbGlossaryCfg::field_label]);
-			(isset($_REQUEST[dbGlossaryCfg::field_value.'_'.$id])) ? 
-				$val = $_REQUEST[dbGlossaryCfg::field_value.'_'.$id] : 
+			(isset($_REQUEST[dbGlossaryCfg::field_value.'_'.$id])) ?
+				$val = $_REQUEST[dbGlossaryCfg::field_value.'_'.$id] :
 				$val = $entry[dbGlossaryCfg::field_value];
-				// Hochkommas maskieren 
+				// Hochkommas maskieren
 				$val = str_replace('"', '&quot;', stripslashes($val));
 			$value = sprintf(	'<input type="text" name="%s_%s" value="%s" />', dbGlossaryCfg::field_value, $id,	$val);
 			$desc = constant($entry[dbGlossaryCfg::field_description]);
@@ -1046,7 +1044,7 @@ class toolGlossary {
 		}
 		else {
 			$intro = sprintf('<div class="intro">%s</div>', gl_intro_cfg);
-		}		
+		}
 		$data = array(
 			'form_name'						=> 'konfiguration',
 			'form_action'					=> $this->page_link,
@@ -1063,12 +1061,12 @@ class toolGlossary {
 		);
 		return $parser->get($this->template_path.'backend.cfg.htt', $data);
 	} // dlgConfig()
-	
+
 	/**
 	 * Ueberprueft Aenderungen die im Dialog dlgConfig() vorgenommen wurden
 	 * und aktualisiert die entsprechenden Datensaetze.
 	 * Fuegt neue Datensaetze ein.
-	 * 
+	 *
 	 * @return STR DIALOG dlgConfig()
 	 */
 	public function configCheck() {
@@ -1082,7 +1080,7 @@ class toolGlossary {
 				if (isset($_REQUEST[dbGlossaryCfg::field_value.'_'.$id])) {
 					$value = $_REQUEST[dbGlossaryCfg::field_value.'_'.$id];
 					$where = array();
-					$where[dbGlossaryCfg::field_id] = $id; 
+					$where[dbGlossaryCfg::field_id] = $id;
 					$config = array();
 					if (!$dbGlossaryCfg->sqlSelectRecord($where, $config)) {
 						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryCfg->getError()));
@@ -1097,7 +1095,7 @@ class toolGlossary {
 						// Wert wurde geaendert
 						if (($config[dbGlossaryCfg::field_name] == dbGlossaryCfg::cfgGroupArray) &&	(empty($value))) {
 							// Sonderfall: Gruppe darf nicht leer sein!
-							$message .= gl_error_cfg_group_empty;		
+							$message .= gl_error_cfg_group_empty;
 						}
 						else {
 							if (!$dbGlossaryCfg->setValue($value, $id) && $dbGlossaryCfg->isError()) {
@@ -1114,8 +1112,8 @@ class toolGlossary {
 						}
 					}
 				}
-			}		
-		}		
+			}
+		}
 		// ueberpruefen, ob ein neuer Eintrag hinzugefuegt wurde
 		if ((isset($_REQUEST[dbGlossaryCfg::field_name])) && (!empty($_REQUEST[dbGlossaryCfg::field_name]))) {
 			// pruefen ob dieser Konfigurationseintrag bereits existiert
@@ -1155,9 +1153,9 @@ class toolGlossary {
 					$id = -1;
 					if (!$dbGlossaryCfg->sqlInsertRecord($data, $id)) {
 						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryCfg->getError()));
-						return false; 
+						return false;
 					}
-					$message .= sprintf(gl_msg_cfg_add_success, $id, $data[dbGlossaryCfg::field_name]);		
+					$message .= sprintf(gl_msg_cfg_add_success, $id, $data[dbGlossaryCfg::field_name]);
 				}
 				else {
 					// Daten unvollstaendig
@@ -1174,15 +1172,15 @@ class toolGlossary {
 			$csvFile = WB_PATH.MEDIA_DIRECTORY.'/'.date('ymd-His').'-glossary-cfg.csv';
 			if (!$dbGlossaryCfg->csvExport($where, $csv, $csvFile)) {
 				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryCfg->getError()));
-				return false; 
+				return false;
 			}
 			$message .= sprintf(gl_msg_cfg_csv_export, basename($csvFile));
 		}
-		
+
 		if (!empty($message)) $this->setMessage($message);
 		return $this->dlgConfig();
 	} // checkConfig()
-  
+
 	public function csvExportGlossary() {
 		// Liste als CSV exportieren
 		isset($_REQUEST[self::request_csv_export]) ? $grp = $_REQUEST[self::request_csv_export] : $grp = -1;
@@ -1196,7 +1194,7 @@ class toolGlossary {
 		$csvFile = WB_PATH.MEDIA_DIRECTORY.'/'.date('ymd-His').'-glossary-export.csv';
 		if (!$dbGlossary->csvExport($where, $csv, $csvFile)) {
 			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossary->getError()));
-			return false; 
+			return false;
 		}
 		if ($grp == -1) {
 			$this->setMessage(sprintf(gl_msg_csv_export_liste_all, basename($csvFile)));
@@ -1206,7 +1204,7 @@ class toolGlossary {
 		}
 		return $this->dlgGlossary();
 	} // csvExportGlossary()
-	
+
 	public function csvExportLiterature() {
 		// Liste als CSV exportieren
 		$dbGlossaryLiterature = new dbGlossaryLiterature();
@@ -1216,13 +1214,13 @@ class toolGlossary {
 		$csvFile = WB_PATH.MEDIA_DIRECTORY.'/'.date('ymd-His').'-literature-export.csv';
 		if (!$dbGlossaryLiterature->csvExport($where, $csv, $csvFile)) {
 			$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryLiterature->getError()));
-			return false; 
+			return false;
 		}
 		$this->setMessage(sprintf(gl_msg_csv_export_literature, basename($csvFile)));
 		return $this->dlgLiterature();
 	} // csvExportLiterature()
-	
-	
+
+
 	public function csvImportGlossary() {
 		if (is_uploaded_file($_FILES[self::request_csv_import]['tmp_name'])) {
 			// Dateiupload bearbeiten
@@ -1233,7 +1231,7 @@ class toolGlossary {
 				// SPECIAL: GPSP
 				if (file_exists(WB_PATH.'/modules/dbgpsptool/include.dbglossary.php')) {
 					// Spezielle Importroutine fuer GPSP
-					include(WB_PATH.'/modules/dbgpsptool/include.dbglossary.php');					
+					include(WB_PATH.'/modules/dbgpsptool/include.dbglossary.php');
 				}
 				else {
 					// Standard Import
@@ -1269,7 +1267,7 @@ class toolGlossary {
 		}
 		return $this->dlgGlossary();
 	} // csvImportGlossary()
-	
+
 	public function csvImportLiterature() {
 		if (is_uploaded_file($_FILES[self::request_csv_import]['tmp_name'])) {
 			// Dateiupload bearbeiten
@@ -1308,7 +1306,7 @@ class toolGlossary {
 		}
 		return $this->dlgLiterature();
 	} // csvImportLiterature()
-	
+
 	public function dlgAddSource() {
 		global $parser;
 		$form_name = 'form_edit';
@@ -1330,7 +1328,7 @@ class toolGlossary {
   		$item = $item[0];
   		foreach ($item as $key => $value) {
   			if (isset($_REQUEST[$key])) {
-  				$item[$key] = $_REQUEST[$key]; 
+  				$item[$key] = $_REQUEST[$key];
   			}
   		}
   	}
@@ -1341,11 +1339,11 @@ class toolGlossary {
   		$item[dbGlossaryLiterature::field_status] = dbGlossaryLiterature::status_active;
   		foreach ($item as $key => $value) {
   			if (isset($_REQUEST[$key])) {
-  				$item[$key] = $_REQUEST[$key]; 
+  				$item[$key] = $_REQUEST[$key];
   			}
   		}
   	}
-  	
+
   	$items = '';
   	$row = '<tr><td class="label">%s</td><td>%s</td></tr>';
   	// ID
@@ -1382,7 +1380,7 @@ class toolGlossary {
   	$items .= sprintf($row, gl_label_source_isbn, sprintf('<input type="text" name="%s" value="%s" />', dbGlossaryLiterature::field_isbn, $item[dbGlossaryLiterature::field_isbn]));
   	// URL
   	$items .= sprintf($row, gl_label_source_url, sprintf('<input type="text" name="%s" value="%s" />', dbGlossaryLiterature::field_url, $item[dbGlossaryLiterature::field_url]));
-  	
+
   	// Status
 		$select = '';
   	foreach ($dbGlossaryLiterature->status_array as $value => $name) {
@@ -1390,18 +1388,18 @@ class toolGlossary {
 			$select .= sprintf('<option value="%s"%s>%s</option>', $value, $selected, $name);
   	}
   	$items .= sprintf($row, gl_label_status, sprintf('<select name="%s">%s</select>', dbGlossaryLiterature::field_status, $select));
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
 		}
 		else {
-			($id != -1) ? $intro = gl_intro_source_edit : $intro = gl_intro_source_new; 
+			($id != -1) ? $intro = gl_intro_source_edit : $intro = gl_intro_source_new;
 			$intro = sprintf('<div class="intro">%s</div>', $intro);
 		}
 		// Ueberschrift
 		($id != -1) ? $header = gl_header_source_edit : $header = gl_header_source_new;
-  	
+
 		$data = array(
 		'form_name'				=> $form_name,
 			'form_action'			=> $this->page_link,
@@ -1419,7 +1417,7 @@ class toolGlossary {
 		);
 		return $parser->get($this->template_path.'backend.source.htt', $data);
 	} // dlgAddSource
-	
+
 	private function sourceCheck() {
 		global $tools;
 		$result = '';
@@ -1471,7 +1469,7 @@ class toolGlossary {
   			$id = -1;
   			if (!$dbGlossaryLiterature->sqlInsertRecord($fields, $id)) {
   				$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryLiterature->getError()));
-  				return false; 
+  				return false;
   			}
   			$_REQUEST[dbGlossaryLiterature::field_id] = $id;
   			$result = sprintf(gl_msg_source_add, $id);
@@ -1495,10 +1493,10 @@ class toolGlossary {
 			return false;
   	}
 	} // checkSource()
-	
+
 	/**
 	 * Liste der Literaturquellen
-	 * 
+	 *
 	 * @return STR Dialog
 	 */
 	public function dlgLiterature() {
@@ -1507,8 +1505,8 @@ class toolGlossary {
   	$abc_tab = '';
   	(isset($_REQUEST[self::request_abc])) ? $abc = $_REQUEST[self::request_abc] : $abc = 'a';
   	foreach ($this->tab_abc_array as $key => $value) {
-  		($key== $abc) ? $selected = ' class="selected"' : $selected = ''; 
-  		$abc_tab .= sprintf(	'<li%s><a href="%s">%s</a></li>', 
+  		($key== $abc) ? $selected = ' class="selected"' : $selected = '';
+  		$abc_tab .= sprintf(	'<li%s><a href="%s">%s</a></li>',
 	  												$selected,
 	  												sprintf('%s&%s=%s&%s=%s', $this->page_link, self::request_action, self::action_literature, self::request_abc, $key),
 	  												$value
@@ -1551,7 +1549,7 @@ class toolGlossary {
   		// es gibt noch keine Literaturquellen, Hilfeseite aufrufen
   		return $this->dlgHelp();
   	}
-  									
+
   	$SQL = sprintf(	"SELECT * FROM %s WHERE %s AND %s!='%s' ORDER BY %s ASC",
   									$dbGlossaryLiterature->getTableName(),
   									$search,
@@ -1563,7 +1561,7 @@ class toolGlossary {
   		$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbGlossaryLiterature->getError()));
   		return false;
   	}
-  	
+
 		$items = '';
   	if (sizeof($literatur) < 1) {
   		// Keine Eintraege bei diesem Buchstaben
@@ -1591,22 +1589,22 @@ class toolGlossary {
   		else {
   		  $flipFlop = true; $flip = 'flop';
   		}
-  		$id = sprintf('<a href="%s" title="%s">%05d</a>', 
-  									sprintf('%s&%s=%s&%s=%s', 
-  													$this->page_link, 
-  													self::request_action, 
-  													self::action_source, 
-  													dbGlossaryLiterature::field_id, 
+  		$id = sprintf('<a href="%s" title="%s">%05d</a>',
+  									sprintf('%s&%s=%s&%s=%s',
+  													$this->page_link,
+  													self::request_action,
+  													self::action_source,
+  													dbGlossaryLiterature::field_id,
   													$quelle[dbGlossaryLiterature::field_id]),
   									gl_header_lit_edit,
   									$quelle[dbGlossaryLiterature::field_id]);
   		// Bearbeiten
   		$edit = sprintf('<a href="%s" title="%s"><img src="%s" /></a>',
-  										sprintf('%s&%s=%s&%s=%s', 
-  														$this->page_link, 
-  														self::request_action, 
-  														self::action_source, 
-  														dbGlossaryLiterature::field_id, 
+  										sprintf('%s&%s=%s&%s=%s',
+  														$this->page_link,
+  														self::request_action,
+  														self::action_source,
+  														dbGlossaryLiterature::field_id,
   														$quelle[dbGlossaryLiterature::field_id]),
   										gl_header_lit_edit,
   										$this->img_url.'edit.gif');
@@ -1623,7 +1621,7 @@ class toolGlossary {
   											$quelle[dbGlossaryLiterature::field_isbn],
   											$quelle[dbGlossaryLiterature::field_url]	);
   		$footnote = str_ireplace($search, $replace, $typeFooter);
-  		
+
   		$items .= sprintf($row,
   											$flip,
   											$id,
@@ -1632,7 +1630,7 @@ class toolGlossary {
   											$quelle[dbGlossaryLiterature::field_identifer],
   											$footnote
   											);
-  	} // foreach 
+  	} // foreach
   	// Import / Export
   	$import_file = sprintf('<input name="%s" type="file">', self::request_csv_import);
   	$data = array(
@@ -1651,25 +1649,25 @@ class toolGlossary {
   		'btn_import'					=> gl_btn_import
   	);
   	$csv = $parser->get($this->template_path.'backend.csv.htt', $data);
-  	
+
   	// Mitteilungen anzeigen
 		if ($this->isMessage()) {
 			$intro = sprintf('<div class="message">%s</div>', $this->getMessage());
 		}
 		else {
 			$intro = sprintf('<div class="intro">%s</div>', sprintf(gl_intro_literature, $count));
-		}		
+		}
 		$data = array(
 			'abc'						=> $abc_tab,
   		'intro'					=> $intro,
   		'items'					=> $items,
   		'csv'						=> $csv
-		);  	
+		);
 		return $parser->get($this->template_path.'backend.literature.htt', $data);
 	}
-	
-	
-	
+
+
+
 } // class toolGlossary
 
 ?>

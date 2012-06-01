@@ -1,4 +1,3 @@
-<!-- $Id: DE_help.htt 24 2010-08-28 09:59:03Z ralf $ -->
 <div class="help">
   <img src="{$img_src}" style="float:right;padding:0 0 0 15px;" width="250" title="dbGlossary" />
   <h2>dbGlossary</h2>     

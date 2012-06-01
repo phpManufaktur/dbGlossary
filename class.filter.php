@@ -2,33 +2,31 @@
 
 /**
  * dbGlossary
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: class.filter.php 16 2011-07-19 16:04:28Z phpmanufaktur $
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2009 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include (WB_PATH . '/framework/class.secure.php');
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (! file_exists($root . '/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root . '/framework/class.secure.php')) {
+        include ($root . '/framework/class.secure.php');
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 
@@ -50,12 +48,12 @@ else {
  */
 function parseGlossary($content) {
 	$filter = new filterGlossary($content);
-	return $filter->exec();	
+	return $filter->exec();
 }
 
 
 class filterGlossary {
-	
+
 	private $content;
 	private $header;
 	private $body;
@@ -76,15 +74,15 @@ class filterGlossary {
 	private $template_missing_spot;
 	private $template_literature;
 	private $entities2umlauts;
-	
+
 	// Muster fuer die regulaere Suche nach Glossar- und Literatureintraegen
 	private $pregSearchPatternL				= '\|\|';  	// im Text: ||Stichwort||
-	private $pregSearchPatternR				= '\|\|';		// 
+	private $pregSearchPatternR				= '\|\|';		//
 	private $pregAddLitPatternL				= '\{';			// im Text: ||{Literatur}||
 	private $pregAddLitPatternR				= '\}';
 	private $pregSplitPattern					= '|';			// im Text: ||{Literatur|Seite}||
 	private $pregSplitAddPattern			= ':';			// im Text: ||{remark:Anmerkung}||
-	
+
 	public function __construct($content) {
 		$this->content = $content;
 		$end_head = stripos($this->content, '</head>')+strlen('</head>');
@@ -94,10 +92,10 @@ class filterGlossary {
 		$this->img_url = WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/';
 		$this->getGlossaryCfg();
 	} // __construct()
-	
+
 	/**
     * Set $this->error to $error
-    * 
+    *
     * @param STR $error
     */
   public function setError($error) {
@@ -106,7 +104,7 @@ class filterGlossary {
 
   /**
     * Get Error from $this->error;
-    * 
+    *
     * @return STR $this->error
     */
   public function getError() {
@@ -115,7 +113,7 @@ class filterGlossary {
 
   /**
     * Check if $this->error is empty
-    * 
+    *
     * @return BOOL
     */
   public function isError() {
@@ -145,7 +143,7 @@ class filterGlossary {
   	$this->template_literature		= $config->getValue(dbGlossaryCfg::cfgTypeLiterature);
   	$this->entities2umlauts				= $config->getValue(dbGlossaryCfg::cfgEntities2Umlauts);
   }
-  
+
 	public function exec() {
 		if (!$this->isActive) {
 			// dbGlossary ist inaktiv
@@ -167,7 +165,7 @@ class filterGlossary {
 				break;
 			}
 		}
-		if ($this->isError()) { 
+		if ($this->isError()) {
 			// Fehlerbehandlung
 			$error = strip_tags($this->getError());
 			$prompt = sprintf('<div style="position:absolute;top:0px;left:0px;margin:5px;width:10px;height:10px;"><img src="%s" title="%s" alt="%s"></div></body>',
@@ -178,10 +176,10 @@ class filterGlossary {
 		}
 		return $this->content;
 	} // exec();
-	
+
 	/**
 	 * FILTER Routine ersetzt alle Stichworte und Literaturhinweise durch entsprechende Formatierungen...
-	 * 
+	 *
 	 * @todo Wenn der Treffer Tags enthaelt, wird ein Fehler ausgeloest - Protokoll oder E-Mail Benachrichtigung?
 	 */
 	public function check() {
@@ -192,9 +190,9 @@ class filterGlossary {
 		$dbGlossaryLiterature = new dbGlossaryLiterature();
 		$matches = array();
 		$general_pattern = sprintf('/%s(.*?)%s/', $this->pregSearchPatternL, $this->pregSearchPatternR);
-		$general_literature = sprintf('/%s(.*?)%s/', $this->pregAddLitPatternL, $this->pregAddLitPatternR); 
+		$general_literature = sprintf('/%s(.*?)%s/', $this->pregAddLitPatternL, $this->pregAddLitPatternR);
 		preg_match_all($general_pattern, $this->body, $matches);
-		foreach ($matches[1] as $match) { 
+		foreach ($matches[1] as $match) {
 			// Fundstelle
 			$notes = array();
 			$leading = '';
@@ -228,19 +226,19 @@ class filterGlossary {
 							break;
 						endswitch;
 					}
-					else {			
+					else {
 						// kein Schluesselwort
 						$note_key = strtolower(trim($note));
 						switch ($note_key):
 						case dbGlossary::note_footnotes:
 							// Fussnoten ausgeben
 							$note_action = dbGlossary::note_footnotes;
-							break;	
+							break;
 						default:
 							// kein Schluesselwort, Annahme: es handelt sich um eine Anmerkung
 							$note_remark = $note;
 							break;
-						endswitch; 
+						endswitch;
 					}
 				} // foreach
 				if ($note_action == dbGlossary::note_remark) {
@@ -254,31 +252,31 @@ class filterGlossary {
 						}
 						else {
 							// Annahme: Identifier angegeben
-							$where[dbGlossaryLiterature::field_identifer] = $note_source; 
+							$where[dbGlossaryLiterature::field_identifer] = $note_source;
 						}
 						$source = array();
 						if (!$dbGlossaryLiterature->sqlSelectRecord($where, $source)) {
 							$this->setError(sprintf('[%s - %s] - %s', __METHOD__, __LINE__, $dbGlossaryLiterature->getError()));
 							return false;
 						}
-						if (count($source) > 1) { 
+						if (count($source) > 1) {
 							// mehr als eine Quelle gefunden
-							$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, 
-								sprintf(gl_error_filter_multiple_source, 
-												$note_source, 
-												sizeof($source), 
-												$source[0][dbGlossaryLiterature::field_id], 
+							$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__,
+								sprintf(gl_error_filter_multiple_source,
+												$note_source,
+												sizeof($source),
+												$source[0][dbGlossaryLiterature::field_id],
 												$source[0][dbGlossaryLiterature::field_identifer])));
 							// die erste Quelle verwenden
 							$note_source = $source[0][dbGlossaryLiterature::field_id];
 						}
-						elseif (count($source) == 1) { 
+						elseif (count($source) == 1) {
 							// genau eine Quelle gefunden
 							$note_source = $source[0][dbGlossaryLiterature::field_id];
 						}
 						else {
 							// kein Treffer
-							$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, 
+							$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__,
 								sprintf(gl_error_filter_no_source, $note_source)));
 							$note_source = -1;
 						}
@@ -335,11 +333,11 @@ class filterGlossary {
   															$quelle[dbGlossaryLiterature::field_isbn],
   															$quelle[dbGlossaryLiterature::field_url]);
   						$literatur = str_ireplace($search, $replace, $this->template_source);
-  						
+
   						(empty($footnote[dbGlossaryFootnotes::field_remark])) ? $remark = '' : $remark = sprintf(', %s', $footnote[dbGlossaryFootnotes::field_remark]);
   						$search  = array('{number}', '{footnote}');
   						$replace = array($footnote[dbGlossaryFootnotes::field_note_id], $literatur.$remark);
-  						$footer .= str_ireplace($search, $replace, $this->template_footnote);	
+  						$footer .= str_ireplace($search, $replace, $this->template_footnote);
 						}
 						else {
 							// nur Anmerkung ausgeben
@@ -350,7 +348,7 @@ class filterGlossary {
 					}
 					if (empty($footer)) {
 						// keine Fussnoten ausgeben, Ausgabe bereinigen
-						$this->body = str_replace(stripslashes($this->pregSearchPatternL).$match.stripslashes($this->pregSearchPatternR), '', $this->body); 
+						$this->body = str_replace(stripslashes($this->pregSearchPatternL).$match.stripslashes($this->pregSearchPatternR), '', $this->body);
 					}
 					else {
 						// Fussnoten ausgeben
@@ -372,7 +370,7 @@ class filterGlossary {
 					// Treffer
 					$process = true;
 					$catchword = $catchword[0];
-					if ($catchword[dbGlossary::field_type] == dbGlossary::type_db_glossary) { 
+					if ($catchword[dbGlossary::field_type] == dbGlossary::type_db_glossary) {
 						// dbGlossary: Verweis
 						$where = array();
 						$where[dbGlossary::field_item] = $catchword[dbGlossary::field_explain];
@@ -391,9 +389,9 @@ class filterGlossary {
 					}
 					if ($process) {
 						$search  = array('{explain}', '{catchword}', '{link}', '{target}', '{error}');
-						$replace = array(	$catchword[dbGlossary::field_explain], 
-															$match, 
-															$catchword[dbGlossary::field_link], 
+						$replace = array(	$catchword[dbGlossary::field_explain],
+															$match,
+															$catchword[dbGlossary::field_link],
 															$dbGlossary->target_array[$catchword[dbGlossary::field_target]],
 															gl_error_missing_spot);
 						switch ($catchword[dbGlossary::field_type]):
@@ -447,8 +445,8 @@ class filterGlossary {
 					$this->body = str_replace(stripslashes($this->pregSearchPatternL).$match.stripslashes($this->pregSearchPatternR), $match, $this->body);
 				}
 			}
-		}	
+		}
 	} // check()
-	
+
 } // class filterGlossary
 ?>

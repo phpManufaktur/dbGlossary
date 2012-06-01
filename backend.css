@@ -1,8 +1,11 @@
 /**
-  Copyright (c) 2009, Ralf Hertsch
-
-  $Id: backend.css 11 2010-06-09 04:38:59Z ralf $
-**/
+ * dbGlossary
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
+ * @link http://phpmanufaktur.de
+ * @copyright 2009 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ */
 
 body,td,th,input,textarea {
 	font-family: Verdana, Arial, Helvetica, sans-serif;

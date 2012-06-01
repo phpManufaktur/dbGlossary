@@ -2,33 +2,31 @@
 
 /**
  * dbGlossary
- * 
- * @author Ralf Hertsch (ralf.hertsch@phpmanufaktur.de)
+ *
+ * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2011
- * @license GNU GPL (http://www.gnu.org/licenses/gpl.html)
- * @version $Id: class.droplets.php 16 2011-07-19 16:04:28Z phpmanufaktur $
- * 
- * FOR VERSION- AND RELEASE NOTES PLEASE LOOK AT INFO.TXT!
+ * @copyright 2009 - 2012
+ * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
  */
 
-// try to include LEPTON class.secure.php to protect this file and the whole CMS!
-if (defined('WB_PATH')) {	
-	if (defined('LEPTON_VERSION')) include(WB_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-	include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php'); 
+// include class.secure.php to protect this file and the whole CMS!
+if (defined('WB_PATH')) {
+    if (defined('LEPTON_VERSION')) include (WB_PATH . '/framework/class.secure.php');
 } else {
-	$subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));	$dir = $_SERVER['DOCUMENT_ROOT'];
-	$inc = false;
-	foreach ($subs as $sub) {
-		if (empty($sub)) continue; $dir .= '/'.$sub;
-		if (file_exists($dir.'/framework/class.secure.php')) { 
-			include($dir.'/framework/class.secure.php'); $inc = true;	break; 
-		} 
-	}
-	if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include LEPTON class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    $oneback = "../";
+    $root = $oneback;
+    $level = 1;
+    while (($level < 10) && (! file_exists($root . '/framework/class.secure.php'))) {
+        $root .= $oneback;
+        $level += 1;
+    }
+    if (file_exists($root . '/framework/class.secure.php')) {
+        include ($root . '/framework/class.secure.php');
+    } else {
+        trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+    }
 }
-// end include LEPTON class.secure.php
+// end include class.secure.php
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 
@@ -42,7 +40,7 @@ class dbDroplets extends dbConnectLE {
 	const field_modified_by			= 'modified_by';
 	const field_active					= 'active';
 	const field_comments				= 'comments';
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->setTableName('mod_droplets');
@@ -54,24 +52,24 @@ class dbDroplets extends dbConnectLE {
 		$this->addFieldDefinition(self::field_modified_by, "INT(11) NOT NULL DEFAULT '0'");
 		$this->addFieldDefinition(self::field_active, "INT(11) NOT NULL DEFAULT '0'");
 		$this->addFieldDefinition(self::field_comments, "TEXT NOT NULL DEFAULT ''");
-		$this->checkFieldDefinitions();	
+		$this->checkFieldDefinitions();
 	} // __construct()
-	
+
 } // class dbDroplets
 
 
 class checkDroplets {
-	
+
 	var $droplet_path	= '';
 	var $error = '';
-	
+
 	public function __construct() {
 		$this->droplet_path = WB_PATH . '/modules/' . basename(dirname(__FILE__)) . '/droplets/' ;
 	} // __construct()
-		
+
 	/**
     * Set $this->error to $error
-    * 
+    *
     * @param STR $error
     */
   public function setError($error) {
@@ -80,7 +78,7 @@ class checkDroplets {
 
   /**
     * Get Error from $this->error;
-    * 
+    *
     * @return STR $this->error
     */
   public function getError() {
@@ -89,23 +87,23 @@ class checkDroplets {
 
   /**
     * Check if $this->error is empty
-    * 
+    *
     * @return BOOL
     */
   public function isError() {
     return (bool) !empty($this->error);
   } // isError
-	
+
 	public function insertDropletsIntoTable() {
 		global $admin;
 		// Read droplets from directory
-		$folder = opendir($this->droplet_path.'.'); 
+		$folder = opendir($this->droplet_path.'.');
 		$names = array();
 		while (false !== ($file = readdir($folder))) {
 			if (basename(strtolower($file)) != 'index.php') {
 				$ext = strtolower(substr($file,-4));
 				if ($ext	==	".php") {
-					$names[count($names)] = $file; 
+					$names[count($names)] = $file;
 				}
 			}
 		}
@@ -160,12 +158,12 @@ class checkDroplets {
 						$this->setError(sprintf('[%s - %s] %s', __METHOD__, __LINE__, $dbDroplets->getError()));
 						return false;
 					}
-				}				
-			}  
+				}
+			}
 		}
 		return true;
 	} // insertDropletsIntoTable()
-	
+
 	public function getDropletCodeFromFile($dropletfile) {
 		$data = "";
 		$filename = $this->droplet_path.$dropletfile;
@@ -173,10 +171,10 @@ class checkDroplets {
 			$filehandle = fopen ($filename, "r");
 			$data = fread ($filehandle, filesize ($filename));
 			fclose($filehandle);
-		}	
+		}
 		return $data;
 	} // getDropletCodeFromFile()
-	
+
 } // checkDroplets
 
 /**
@@ -190,7 +188,7 @@ class checkDroplets {
  */
 
 function show_list($link_intern=true, $link_extern=true, $groups=array()) {
-	return show_glossary_list($link_intern, $link_extern, $groups);	
+	return show_glossary_list($link_intern, $link_extern, $groups);
 } // show_list
 
 /**
@@ -215,12 +213,12 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 	}
 	else {
 		($az_tabs_start_empty) ? $active_tab = -1 :$active_tab = $az_tabs[0];
-	} 
+	}
 	$tools = new rhTools();
 	$page_link = '#';
 	$tools->getPageLinkByPageID(PAGE_ID, $page_link);
 	$az_tabs_result = '';
-	
+
 	$result = '';
 	$and = '';
 	if (is_array($groups) && (!empty($groups))) {
@@ -230,7 +228,7 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 		foreach ($groups as $group) {
 			if (!$start) $and .= ' OR ';
 			if ($start) $start = false;
-			$and .= sprintf("%s='%s'", dbGlossary::field_group, $group); 
+			$and .= sprintf("%s='%s'", dbGlossary::field_group, $group);
 		}
 		$and .= ')';
 	}
@@ -268,31 +266,31 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 	// Icons fuer interne und externe Links
 	$icon_extern = $dbConfig->getValue(dbGlossaryCfg::cfgIconLinkExtern);
 	if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_extern)) {
-		$img_extern = sprintf('<img src="%s" alt="%s" title="%s" />', 
-													WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_extern, 
+		$img_extern = sprintf('<img src="%s" alt="%s" title="%s" />',
+													WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_extern,
 													gl_text_link_extern, gl_text_link_extern);
 	}
 	else {
-		$img_extern = sprintf('<img src="%s" alt="%s" title="%s" />', 
-													WB_URL.MEDIA_DIRECTORY.'/'.$icon_extern, 
+		$img_extern = sprintf('<img src="%s" alt="%s" title="%s" />',
+													WB_URL.MEDIA_DIRECTORY.'/'.$icon_extern,
 													gl_text_link_extern, gl_text_link_extern);
 	}
 	$icon_intern = $dbConfig->getValue(dbGlossaryCfg::cfgIconLinkIntern);
 	if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_intern)) {
-		$img_intern = sprintf('<img src="%s" alt="%s" title="%s" />', 
-													WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_intern, 
+		$img_intern = sprintf('<img src="%s" alt="%s" title="%s" />',
+													WB_URL.'/modules/'.basename(dirname(__FILE__)).'/img/'.$icon_intern,
 													gl_text_link_intern, gl_text_link_intern);
 	}
 	else {
-		$img_intern = sprintf('<img src="%s" alt="%s" title="%s" />', 
-													WB_URL.MEDIA_DIRECTORY.'/'.$icon_intern, 
+		$img_intern = sprintf('<img src="%s" alt="%s" title="%s" />',
+													WB_URL.MEDIA_DIRECTORY.'/'.$icon_intern,
 													gl_text_link_intern, gl_text_link_intern);
 	}
 	if ($az_tabs_use) {
 		foreach ($az_tabs as $tab) {
 			if ($tab == $active_tab) {
 				// aktiver Tab
-				$az_tabs_result .= str_replace('{tab}', sprintf('<span class="gl_tab_active">%s</span>', $tab), $az_tabs_item); 
+				$az_tabs_result .= str_replace('{tab}', sprintf('<span class="gl_tab_active">%s</span>', $tab), $az_tabs_item);
 			}
 			else {
 				// inaktiver Tab, Link einfuegen
@@ -342,11 +340,11 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 				}
 				else {
 					// Querverweis befindet sich moeglicherweise in einem anderem TAB - Link entsprechend aufbauen...
-					$explain = sprintf(	'%s&nbsp;<a href="%s?tab=%s#%s">%s</a>', 
-															$img_intern, 
-															$page_link, 
+					$explain = sprintf(	'%s&nbsp;<a href="%s?tab=%s#%s">%s</a>',
+															$img_intern,
+															$page_link,
 															strtoupper($linked[dbGlossary::field_item][0]), // ersten Buchstaben des Verweistext als TAB-Ziel verwenden
-															$linked[dbGlossary::field_id], 
+															$linked[dbGlossary::field_id],
 															$linked[dbGlossary::field_item]);
 				}
 			}
@@ -372,8 +370,8 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 			break;
 		endswitch;
 		if (!$skip) {
-			$result .= sprintf(	'<dt><a name="%s"></a>%s</dt>'."\r\n".'<dd>%s</dd>'."\r\n", 
-													$stichwort[dbGlossary::field_id], 
+			$result .= sprintf(	'<dt><a name="%s"></a>%s</dt>'."\r\n".'<dd>%s</dd>'."\r\n",
+													$stichwort[dbGlossary::field_id],
 													$stichwort[dbGlossary::field_item],
 													$explain);
 		}
@@ -392,7 +390,7 @@ function show_glossary_list($link_intern=true, $link_extern=true, $groups=array(
 	return $result;
 }
 
-function show_literature_list($groups=array()) { 
+function show_literature_list($groups=array()) {
 	$dbLiterature = new dbGlossaryLiterature();
 	$dbConfig = new dbGlossaryCfg();
 	$az_tabs = $dbConfig->getValue(dbGlossaryCfg::cfgAZTabs);
@@ -405,12 +403,12 @@ function show_literature_list($groups=array()) {
 	}
 	else {
 		($az_tabs_start_empty) ? $active_tab = -1 :$active_tab = $az_tabs[0];
-	} 
+	}
 	$tools = new rhTools();
 	$page_link = '#';
 	$tools->getPageLinkByPageID(PAGE_ID, $page_link);
 	$az_tabs_result = '';
-	
+
 	$result = '';
 	$and = '';
 	if (is_array($groups) && (!empty($groups))) {
@@ -420,7 +418,7 @@ function show_literature_list($groups=array()) {
 		foreach ($groups as $group) {
 			if (!$start) $and .= ' OR ';
 			if ($start) $start = false;
-			$and .= sprintf("%s='%s'", dbGlossaryLiterature::field_group, $group); 
+			$and .= sprintf("%s='%s'", dbGlossaryLiterature::field_group, $group);
 		}
 		$and .= ')';
 	}
@@ -452,7 +450,7 @@ function show_literature_list($groups=array()) {
 		foreach ($az_tabs as $tab) {
 			if ($tab == $active_tab) {
 				// aktiver Tab
-				$az_tabs_result .= str_replace('{tab}', $tab, $az_tabs_item); 
+				$az_tabs_result .= str_replace('{tab}', $tab, $az_tabs_item);
 			}
 			else {
 				// inaktiver Tab, Link einfuegen
@@ -467,7 +465,7 @@ function show_literature_list($groups=array()) {
 		// Autorenname
 		$author = $item[dbGlossaryLiterature::field_author];
 		$publication = sprintf('<span class="literature_title">%s</span>', $item[dbGlossaryLiterature::field_title]);
-		if (!empty($item[dbGlossaryLiterature::field_subtitle])) 
+		if (!empty($item[dbGlossaryLiterature::field_subtitle]))
 			$publication .= sprintf('<span class="literature_subtitle">%s</span>', $item[dbGlossaryLiterature::field_subtitle]);
 		$desc = '';
 		if (!empty($item[dbGlossaryLiterature::field_published_place]))
@@ -481,15 +479,15 @@ function show_literature_list($groups=array()) {
 		$publication .= sprintf('<span class="literature_description">%s</span>', $desc);
 		$result .= sprintf(	'<dt>%s</dt>'."\r\n".'<dd>%s</dd>'."\r\n", $author, $publication);
 	}
-	
+
 	$result = sprintf('%s'."\r\n".'<dl class="literature_list">%s</dl>', $az_tabs_result, $result);
-	
-	
+
+
 	if ($az_tabs_use && count($literature) > 20) {
 		// bei mehr als 20 Eintraegen TAB Leiste auch unterhalb einfuegen
 		$result .= "\r\n".$az_tabs_result;
 	}
-	
+
 	return $result;
 } // show_literature_list()
 

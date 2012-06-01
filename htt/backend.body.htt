@@ -1,4 +1,3 @@
-<!-- $Id: backend.body.htt 11 2010-06-09 04:38:59Z ralf $ -->
 <div class="gl_backend">
   {$navigation}
   <div{$class}>{$content}</div>
