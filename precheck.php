@@ -30,13 +30,13 @@ if (defined('WB_PATH')) {
 
 
 // Checking Requirements
-
-$PRECHECK['WB_VERSION'] = array('VERSION' => '2.8', 'OPERATOR' => '>=');
+if (!defined('LEPTON_VERSION'))
+  $PRECHECK['WB_VERSION'] = array('VERSION' => '2.8', 'OPERATOR' => '>=');
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS'] = array(
-	'dbconnect_le'	=> array('VERSION' => '0.68', 'OPERATOR' => '>='),
-	'rhtools' => array('VERSION' => '0.50', 'OPERATOR' => '>='),
-	'dwoo' => array('VERSION' => '0.10', 'OPERATOR' => '>=')
+	'dbconnect_le'	=> array('VERSION' => '0.69', 'OPERATOR' => '>='),
+	'rhtools' => array('VERSION' => '0.51', 'OPERATOR' => '>='),
+	'dwoo' => array('VERSION' => '0.13', 'OPERATOR' => '>=')
 );
 
 global $database;
