@@ -71,6 +71,29 @@ else {
 			register_output_filter('dbglossary', 'dbGlossary');
 		}
 	} // LEPTON
+	elseif (version_compare(WB_VERSION, '2.8.3', '>=')) {
+	  // Patch WebsiteBaker 2.8.3
+	  $message = "";
+	  if (file_exists(WB_PATH.'/modules/output_filter/index.php')) {
+	    if (!isPatched(WB_PATH.'/modules/output_filter/index.php')) {
+	      if (doPatchWB283(WB_PATH.'/modules/output_filter/index.php')) {
+	        $message = "Frontend output filter succesfully patched for dbGlossary... dbGlossary are now ready to use.";
+	      }
+	      else {
+	        $message = "Patching frontend output filter failed... Please click the HELP button in the dbGlossary admintool for instructions how to manual patch the output filter.";
+	      }
+	    }
+	    else {
+	      $message = "The frontend output filter was already patched.";
+	    }
+	  }
+	  else {
+	    $message = "Installation not completed. The frontend output filter does not exist (Wrong WB version?). dbGlossary cannot be used.";
+	  }
+	  if ($message != "") {
+	    echo '<script language="javascript">alert ("'.$message.'");</script>';
+	  }
+	}
 	else {
 		// Patch WebsiteBaker Output Filter
 		$message = "";

@@ -680,4 +680,51 @@ function doPatch($filename) {
 	return false;
 }
 
+/**
+ * insert patch into output_filter
+ *
+ * @param STR $filename
+ * @return BOOL
+ */
+function doPatchWB283($filename) {
+  $returnvalue = false;
+  $tempfile = WB_PATH .'/modules/output_filter/new_filter.php';
+  $backup = WB_PATH .'/modules/output_filter/original-glossary-filter-routines.php';
+
+  $addline = "\n\n\t\t// exec dbGlossary filtering ";
+  $addline .= "\n\t\tif(file_exists(WB_PATH .'/modules/dbglossary/class.filter.php')) { ";
+  $addline .= "\n\t\t\trequire_once (WB_PATH .'/modules/dbglossary/class.filter.php'); ";
+  $addline .= "\n\t\t\t".'$content = parseGlossary($content); ';
+  $addline .= "\n\t\t}\n\n ";
+  if(file_exists($filename)) {
+    $lines = file ($filename);
+    $handle = @fopen ($tempfile, 'w');
+    if ($handle !== false) {
+      foreach ($lines as $line) {
+        if (@fwrite ($handle, $line) == true) {
+          if (strpos($line, "define('OUTPUT_FILTER_DOT_REPLACEMENT'" ) > 0) {
+            $returnvalue = true;
+            fwrite($handle, $addline);
+          }
+        }
+        else {
+          @fclose($handle);
+          return false;
+        }
+      }
+      fclose ($handle);
+      if (rename($filename, $backup)) {
+        if (rename($tempfile, $filename)) {
+          return $returnvalue;
+        }
+        else {
+          return false;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+
 ?>
