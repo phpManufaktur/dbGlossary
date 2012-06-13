@@ -31,7 +31,7 @@ if (defined('WB_PATH')) {
 $module_directory     = 'dbglossary';
 $module_name          = 'dbGlossary';
 $module_function      = 'tool';
-$module_version       = '0.32';
+$module_version       = '0.33';
 $module_status        = 'Stable';
 $module_platform      = '2.8';
 $module_author        = 'Ralf Hertsch, Berlin (Germany)';

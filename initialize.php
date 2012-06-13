@@ -39,10 +39,8 @@ else {
 }
 
 if (!class_exists('dbConnectLE')) require_once(WB_PATH.'/modules/dbconnect_le/include.php');
-if (!class_exists('Dwoo')) require_once(WB_PATH.'/modules/dwoo/include.php');
-require_once(WB_PATH.'/modules/rhtools/include.php');
 
-$tools = new rhTools();
+require_once(WB_PATH.'/modules/rhtools/include.php');
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.glossary.php');
 

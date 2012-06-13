@@ -1,5 +1,10 @@
 ### dbGlossary 
 
+0.33 - 2012-06-13
+
+* changed patching for output filter of WebsiteBaker 2.8.3
+* changed template caching path to /temp/cache/ 
+
 0.32 - 2012-05-23
 
 * removed: field_exec in class.glossary.php is no longer needed

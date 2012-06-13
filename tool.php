@@ -41,13 +41,22 @@ else {
 }
 
 global $tools;
-global $parser;
 
 if (!is_object($tools)) $tools = new rhTools();
-if (!is_object($parser)) $parser = new Dwoo();
 
-$toolGloss = new toolGlossary();
-$toolGloss->action();
+// initialize Dwoo
+global $parser;
+
+if (!class_exists('Dwoo')) {
+  require_once WB_PATH.'/modules/dwoo/include.php';
+}
+
+$cache_path = WB_PATH.'/temp/cache';
+if (!file_exists($cache_path)) mkdir($cache_path, 0755, true);
+$compiled_path = WB_PATH.'/temp/compiled';
+if (!file_exists($compiled_path)) mkdir($compiled_path, 0755, true);
+
+if (!is_object($parser)) $parser = new Dwoo($compiled_path, $cache_path);
 
 
 class toolGlossary {
@@ -1669,5 +1678,8 @@ class toolGlossary {
 
 
 } // class toolGlossary
+
+$toolGloss = new toolGlossary();
+$toolGloss->action();
 
 ?>
