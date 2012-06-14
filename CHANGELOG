@@ -1,6 +1,6 @@
 ### dbGlossary 
 
-0.34
+0.34 -2012-06-14
 
 * tool.php checks if the output_filter is patched. This check failed generally
   if CMS is WB 2.8.3 
