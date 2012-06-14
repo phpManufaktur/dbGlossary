@@ -1,5 +1,10 @@
 ### dbGlossary 
 
+0.34
+
+* tool.php checks if the output_filter is patched. This check failed generally
+  if CMS is WB 2.8.3 
+
 0.33 - 2012-06-13
 
 * changed patching for output filter of WebsiteBaker 2.8.3

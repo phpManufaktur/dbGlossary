@@ -333,7 +333,7 @@ class dbGlossaryCfg extends dbConnectLE {
   const cfgLitGroupArray		= 'cfgLitGroupArray';
   const cfgEntities2Umlauts	= 'cfgEntities2Umlauts';
 
-  public $config_array = array(
+  protected $config_array = array(
   	//array('gl_label_cfg_developer_mode', self::cfgDeveloperMode, self::type_boolean, 0, 'gl_desc_cfg_developer_mode'),
   	array('gl_label_cfg_active', self::cfgActive, self::type_boolean, 1, 'gl_desc_cfg_active'),
   	array('gl_label_cfg_type_abbr', self::cfgTypeAbbr, self::type_string, '<abbr title="{explain}">{catchword}</abbr>', 'gl_desc_cfg_type_abbr'),

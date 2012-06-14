@@ -222,10 +222,13 @@ class toolGlossary {
    * @return BOOL
    */
   private function checkOutputFilter() {
-  	if (file_exists(WB_PATH .'/modules/output_filter/filter-routines.php')) {
-  		if (!isPatched(WB_PATH .'/modules/output_filter/filter-routines.php')) {
+    $path = WB_PATH .'/modules/output_filter/filter-routines.php';
+    if (!defined('LEPTON_VERSION') && version_compare(WB_VERSION, '2.8.3', '>='))
+      $path = WB_PATH .'/modules/output_filter/index.php';
+  	if (file_exists($path)) {
+  		if (!isPatched($path)) {
   			// output_filter is not patched
-  			if (doPatch(WB_PATH .'/modules/output_filter/filter-routines.php')) {
+  			if (doPatch($path)) {
   				// successfully patched
   				$this->setMessage(gl_msg_output_filter_patched);
   				return true;
