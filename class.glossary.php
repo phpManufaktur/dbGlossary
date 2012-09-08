@@ -30,9 +30,6 @@ if (defined('WB_PATH')) {
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/initialize.php');
 
-// by default dbGlossary used the WebsiteBaker and LEPTON CMS table prefix
-define('GLOSSARY_TABLE_PREFIX', TABLE_PREFIX);
-
 class dbGlossary extends dbConnectLE {
 
 	const field_id							= 'gl_id';
@@ -103,11 +100,20 @@ class dbGlossary extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_glossary');
-		$this->setTablePrefix(GLOSSARY_TABLE_PREFIX);
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_glossary');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_item, "VARCHAR(80) NOT NULL DEFAULT ''");
 		$this->addFieldDefinition(self::field_sort, "VARCHAR(80) NOT NULL DEFAULT ''");
@@ -192,6 +198,9 @@ class dbGlossaryLiterature extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	/**
 	 * Constructor for dbGlossary
 	 *
@@ -199,9 +208,15 @@ class dbGlossaryLiterature extends dbConnectLE {
 	 */
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_glossary_literature');
-		$this->setTablePrefix(GLOSSARY_TABLE_PREFIX);
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_glossary_literature');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_identifer, "VARCHAR(80) NOT NULL DEFAULT ''");
 		$this->addFieldDefinition(self::field_type, "TINYINT UNSIGNED NOT NULL DEFAULT '".self::type_book."'");
@@ -243,11 +258,20 @@ class dbGlossaryFootnotes extends dbConnectLE {
 
 	private $create_tables 			= false;
 
+	protected static $config_file = 'config.json';
+	protected static $table_prefix = TABLE_PREFIX;
+
 	public function __construct($create_tables=false) {
 		$this->create_tables = $create_tables;
-		parent::__construct();
-		$this->setTableName('mod_glossary_footnotes');
-		$this->setTablePrefix(GLOSSARY_TABLE_PREFIX);
+		// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_glossary_footnotes');
 		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
 		$this->addFieldDefinition(self::field_page_id, "INT(11) NOT NULL DEFAULT '-1'");
 		$this->addFieldDefinition(self::field_note_id, "INT(11) NOT NULL DEFAULT '-1'");
@@ -359,12 +383,21 @@ class dbGlossaryCfg extends dbConnectLE {
   	array('gl_label_cfg_entities_2_umlauts', self::cfgEntities2Umlauts, self::type_boolean, 1, 'gl_desc_cfg_entities_2_umlauts')
   );
 
+  protected static $config_file = 'config.json';
+  protected static $table_prefix = TABLE_PREFIX;
+
   public function __construct($createTables = false) {
   	$this->createTables = $createTables;
-  	parent::__construct();
-  	$this->setTableName('mod_glossary_cfg');
-  	$this->setTablePrefix(GLOSSARY_TABLE_PREFIX);
-		$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
+  	// use another table prefix?
+    if (file_exists(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json')) {
+      $config = json_decode(file_get_contents(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/config.json'), true);
+      if (isset($config['table_prefix']))
+        self::$table_prefix = $config['table_prefix'];
+    }
+    parent::__construct();
+    $this->setTablePrefix(self::$table_prefix);
+    $this->setTableName('mod_glossary_cfg');
+  	$this->addFieldDefinition(self::field_id, "INT(11) NOT NULL AUTO_INCREMENT", true);
   	$this->addFieldDefinition(self::field_name, "VARCHAR(32) NOT NULL DEFAULT ''");
   	$this->addFieldDefinition(self::field_type, "TINYINT UNSIGNED NOT NULL DEFAULT '".self::type_undefined."'");
   	$this->addFieldDefinition(self::field_value, "VARCHAR(255) NOT NULL DEFAULT ''", false, false, true);
