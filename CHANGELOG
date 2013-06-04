@@ -1,19 +1,21 @@
-### dbGlossary 
+### dbGlossary
 
-0.35 - NOT PUBLISHED, JUST IN PROGRESS
+0.35 - 2013-06-04
 
+* fixed masking error at HTML output of explains (many thanks to elkrem for this
+  solution)
 * added ability to change the table prefix easy via config.json, please read
   <http://yals.de/OQRv0Y> for more informations
 
 0.34 - 2012-06-14
 
 * tool.php checks if the output_filter is patched. This check failed generally
-  if CMS is WB 2.8.3 
+  if CMS is WB 2.8.3
 
 0.33 - 2012-06-13
 
 * changed patching for output filter of WebsiteBaker 2.8.3
-* changed template caching path to /temp/cache/ 
+* changed template caching path to /temp/cache/
 
 0.32 - 2012-05-23
 
@@ -25,7 +27,8 @@
 
 0.31 - 2011-10-28
 
-* Changed: Extend datafields lit_group, lit_title, lit_subtitle, lit_published_place, lit_edition from 80 chars to 255 chars
+* Changed: Extend datafields lit_group, lit_title, lit_subtitle,
+  lit_published_place, lit_edition from 80 chars to 255 chars
 
 0.30 - 2011-07-19
 
@@ -34,12 +37,13 @@
 0.29 - 2011-02-01
 
 * Fixed: Problem with alphabetical order of glossary list
- 
+
 0.28 - 2011-01-30
- 
+
 * Fixed: invalid img tag in glossary list
-* Fixed: while editing keywords changing type no longer loss values of the other fields
- 
+* Fixed: while editing keywords changing type no longer loss values of the other
+  fields
+
 0.27 - 2010-10-19
 
 * Fixed checking of WebsiteBaker Version in precheck.php
@@ -62,7 +66,7 @@
 0.23 - 2010-07-28
 
 * Bugfix: internal links in glossary list don't work across different tab's
-* Changed: in precheck.php checking if UTF-8 is default charset 
+* Changed: in precheck.php checking if UTF-8 is default charset
 
 0.22 - 2010-07-15
 
@@ -100,7 +104,7 @@
 * Added: XHTML support für description of catchword (optional)
 * Added: description pop-ups may use formulas and/or images
 * Added: groups for literature lists
-* Added: droplet for generating a literature list 
+* Added: droplet for generating a literature list
 
 0.15 - 2010-04-04
 
@@ -115,11 +119,12 @@
 
 * SECOND RELEASE CANDIDATE
 * dbStichworte renamed to dbGlossary
-  
+
 0.11 - 2009-09-14
 
 * First RELEASE CANDIDATE
-* Added: Type 'dbStichworte: Link' for crosslinking a plural or synonym to a catchword
+* Added: Type 'dbStichworte: Link' for crosslinking a plural or synonym to a
+  catchword
 * Fixed: Avoid adding already existing catchword
 * Fixed: Error while checking redirections in tools.php function linkCheck()
 * Added: Groups for structuring the catchwords

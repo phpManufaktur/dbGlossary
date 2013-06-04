@@ -676,8 +676,10 @@ class toolGlossary {
   			}
   			// mask Quotes
   			if ($_REQUEST[dbGlossary::field_type] != dbGlossary::type_html) {
-  				// HTML nur bei HTML Stichwort erlauben
-  				$value = strip_tags($value);
+  			    // HTML nur bei HTML Stichwort erlauben
+  			    $value = strip_tags($value);
+  			} else {
+  			    $value = stripslashes($value);
   			}
   			$fields[dbGlossary::field_explain] = $value;
   			break;
