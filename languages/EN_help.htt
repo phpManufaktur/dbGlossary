@@ -1,9 +1,8 @@
 <div class="help">
   <img src="{$img_src}" style="float:right;padding:0 0 0 15px;" width="250" title="dbGlossary" />
-  <h2>dbGlossary</h2>     
+  <h2>dbGlossary</h2>
   <p><b>Version:</b> {$version}</p>
   <p>Copyright &copy; 2009 - {$actual_year} by <a href="mailto:ralf.hertsch@phpmanufaktur.de" title="E-Mail an Ralf Hertsch">Ralf Hertsch</a> (Berlin)</p>
-  <p><i>dbGlossary</i> is  <a href="http://de.wikipedia.org/wiki/Open_source" target="_blank" title="Open Source">Open Source</a> and made available under the terms of <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank" title="GNU General Public License">GNU GPL</a>.</p>
   <p><u><strong>Functions:</strong></u></p>
 <ul>
     <li><i>dbGlossary</i> serves, to simplify use and management of abbreviations, <acronym title="short word, derived from the initals of several words">acronyms</acronym>, special terms and cross-references.</li>

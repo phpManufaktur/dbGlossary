@@ -1,9 +1,8 @@
 <div class="help">
   <img src="{$img_src}" style="float:right;padding:0 0 0 15px;" width="250" title="dbGlossary" />
-  <h2>dbGlossary</h2>     
+  <h2>dbGlossary</h2>
   <p><b>Version:</b> {$version}</p>
   <p>Copyright &copy; 2009 - {$actual_year}, by <a href="mailto:ralf.hertsch@phpmanufaktur.de" title="E-Mail an Ralf Hertsch">Ralf Hertsch</a> (Berlin)</p>
-  <p><i>dbGlossary</i> ist  <a href="http://de.wikipedia.org/wiki/Open_source" target="_blank" title="Quelloffene Software">Open Source</a> und unterliegt den Lizenzbestimmungen der <a href="http://www.gnu.de/documents/gpl.de.html" target="_blank" title="GNU General Public License">GNU GPL</a>.</p>
   <p><u><strong>Funktionen:</strong></u></p>
 <ul>
     <li><i>dbGlossary</i> dient dazu Abkürzungen, <acronym title="Kurzwort, das aus den Anfangsbuchstaben mehrerer Wörter zusammengesetzt ist">Akronyme</acronym>, Fachbegriffe sowie Querverweise auf einfache Weise zu verwalten und zu verwenden.</li>
