@@ -3,8 +3,8 @@
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2012
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ * @copyright 2009 - 2013
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 function glossaryChangeType(target_url, id_type, id_item, name_explain, id_link, id_target, id_group, id_status) {
