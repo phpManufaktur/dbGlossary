@@ -1,5 +1,13 @@
 ### dbGlossary
 
+0.36 - 2013-11-23
+
+* changed license from GNU GPL to MIT license
+* updated header information
+* added checks and handling for BlackCat CMS
+* added filter for BlackCat CMS
+* inbound the class rhTools and move file into dbGlossary directory
+
 0.35 - 2013-06-04
 
 * fixed masking error at HTML output of explains (many thanks to elkrem for this

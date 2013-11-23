@@ -30,8 +30,9 @@ if (defined('WB_PATH')) {
 
 
 // Checking Requirements
-if (!defined('LEPTON_VERSION'))
+if (!defined('LEPTON_VERSION')) {
   $PRECHECK['WB_VERSION'] = array('VERSION' => '2.8', 'OPERATOR' => '>=');
+}
 $PRECHECK['PHP_VERSION'] = array('VERSION' => '5.2.0', 'OPERATOR' => '>=');
 $PRECHECK['WB_ADDONS']['dbconnect_le'] = array('VERSION' => '0.69', 'OPERATOR' => '>=');
 if (!defined('CAT_VERSION')) {
@@ -47,5 +48,3 @@ if ($result) {
     $PRECHECK['CUSTOM_CHECKS'] = array(
     'Default Charset' => array('REQUIRED' => 'utf-8', 'ACTUAL' => $data['value'], 'STATUS' => $status));
 }
-
-?>
