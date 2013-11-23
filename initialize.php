@@ -5,8 +5,8 @@
  *
  * @author Ralf Hertsch <ralf.hertsch@phpmanufaktur.de>
  * @link http://phpmanufaktur.de
- * @copyright 2009 - 2012
- * @license http://www.gnu.org/licenses/gpl.html GNU Public License (GPL)
+ * @copyright 2009 - 2013
+ * @license MIT License (MIT) http://www.opensource.org/licenses/MIT
  */
 
 // include class.secure.php to protect this file and the whole CMS!
@@ -32,15 +32,15 @@ if (!defined('DEBUG')) define('DEBUG', true);
 
 // Sprachdateien einbinden
 if(!file_exists(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php')) {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php');
+    require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/DE.php');
 }
 else {
-	require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php');
+    require_once(WB_PATH .'/modules/'.basename(dirname(__FILE__)).'/languages/' .LANGUAGE .'.php');
 }
 
 if (!class_exists('dbConnectLE')) require_once(WB_PATH.'/modules/dbconnect_le/include.php');
 
-require_once(WB_PATH.'/modules/rhtools/include.php');
+require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/rhtools.php');
 
 require_once(WB_PATH.'/modules/'.basename(dirname(__FILE__)).'/class.glossary.php');
 
